@@ -5,12 +5,14 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str = Field(min_length=6)
     phone_number: str
+    role: str = "user"
 
 class UserResponse(BaseModel):
     id: int
     username: str
     email: str
     phone_number: str
+    role: str
 
 class UserLogin(BaseModel):
     username: str
