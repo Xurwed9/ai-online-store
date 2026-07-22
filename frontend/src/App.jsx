@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard'
 import Products from './pages/Products'
 import Categories from './pages/Categories'
 import Profile from './pages/Profile'
+import Cart from './pages/Cart'
 
 function Protected({ children }) {
   const { user, loading } = useAuth()
@@ -42,6 +43,7 @@ export default function App() {
         <Route path="/dashboard" element={<AdminOnly><Dashboard /></AdminOnly>} />
         <Route path="/products" element={<Protected><Products /></Protected>} />
         <Route path="/categories" element={<Protected><Categories /></Protected>} />
+        <Route path="/cart" element={<Protected><Cart /></Protected>} />
         <Route path="/profile" element={<Protected><Profile /></Protected>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

@@ -49,4 +49,15 @@ export const categories = {
   delete: (id) => axios.delete(`/categories/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }),
 }
 
+const token = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
+const tokenJson = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' } })
+
+export const cart = {
+  getAll: () => axios.get('/cart/', token()),
+  add: (data) => axios.post('/cart/', data, tokenJson()),
+  update: (id, data) => axios.put(`/cart/${id}`, data, tokenJson()),
+  remove: (id) => axios.delete(`/cart/${id}`, token()),
+  clear: () => axios.delete('/cart/', token()),
+}
+
 export default api

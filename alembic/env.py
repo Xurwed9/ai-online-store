@@ -13,7 +13,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from app.database.database import Base, DATABASE_URL
 import app.models.models
-from app.models import categories, product
+from app.models import categories, product, cart
 
 
 # this is the Alembic Config object, which provides

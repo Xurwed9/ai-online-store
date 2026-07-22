@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { Sun, Moon, LogOut, LayoutDashboard } from 'lucide-react'
+import { Sun, Moon, LogOut, LayoutDashboard, ShoppingCart } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 export default function Navbar() {
@@ -29,6 +29,7 @@ export default function Navbar() {
             {isAdmin && <Link to="/dashboard" className={`px-3 py-1.5 rounded-lg text-[13px] font-medium no-underline transition-all ${isActive('/dashboard') ? 'text-accent bg-accent/10' : 'text-text-secondary hover:text-text hover:bg-border'}`}>Dashboard</Link>}
             <Link to="/products" className={`px-3 py-1.5 rounded-lg text-[13px] font-medium no-underline transition-all ${isActive('/products') ? 'text-accent bg-accent/10' : 'text-text-secondary hover:text-text hover:bg-border'}`}>Products</Link>
             <Link to="/categories" className={`px-3 py-1.5 rounded-lg text-[13px] font-medium no-underline transition-all ${isActive('/categories') ? 'text-accent bg-accent/10' : 'text-text-secondary hover:text-text hover:bg-border'}`}>Categories</Link>
+            <Link to="/cart" className={`px-3 py-1.5 rounded-lg text-[13px] font-medium no-underline transition-all flex items-center gap-1 ${isActive('/cart') ? 'text-accent bg-accent/10' : 'text-text-secondary hover:text-text hover:bg-border'}`}><ShoppingCart size={14} />Cart</Link>
             <Link to="/profile" className={`px-3 py-1.5 rounded-lg text-[13px] font-medium no-underline transition-all ${isActive('/profile') ? 'text-accent bg-accent/10' : 'text-text-secondary hover:text-text hover:bg-border'}`}>Profile</Link>
             <button onClick={logout} className="px-3 py-1.5 rounded-lg text-[13px] font-medium text-red border border-red/20 bg-red/10 hover:bg-red/15 cursor-pointer transition-all flex items-center gap-1.5"><LogOut size={14} />Logout</button>
           </>
