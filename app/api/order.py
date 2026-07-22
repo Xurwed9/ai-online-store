@@ -10,6 +10,8 @@ from app.services.order import (
     get_order_by_id,
     update_order_status,
     cancel_order,
+    get_all_orders,
+    get_pending_count,
 )
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
@@ -29,6 +31,23 @@ async def get_orders(
     user: User = Depends(get_current_user),
 ):
     return await get_user_orders(user.id, db)
+
+
+@router.get("/pending-count")
+async def pending_count(
+    db: AsyncSession = Depends(get_db),
+    admin: User = Depends(get_current_admin),
+):
+    count = await get_pending_count(db)
+    return {"count": count}
+
+
+@router.get("/all")
+async def all_orders(
+    db: AsyncSession = Depends(get_db),
+    admin: User = Depends(get_current_admin),
+):
+    return await get_all_orders(db)
 
 
 @router.get("/{order_id}")

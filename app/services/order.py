@@ -4,6 +4,7 @@ from fastapi import HTTPException, status
 from app.models.order import Order, OrderItem
 from app.models.cart import Cart
 from app.models.product import Product
+from app.models.models import User
 
 
 async def create_order_from_cart(user_id: int, db: AsyncSession):
@@ -179,3 +180,51 @@ async def cancel_order(order_id: int, user_id: int, db: AsyncSession):
     await db.commit()
     await db.refresh(order)
     return order
+
+
+async def get_all_orders(db: AsyncSession):
+    result = await db.execute(
+        select(Order).order_by(Order.created_at.desc())
+    )
+    orders = result.scalars().all()
+    enriched = []
+    for order in orders:
+        user_result = await db.execute(
+            select(User).where(User.id == order.user_id)
+        )
+        user = user_result.scalar_one_or_none()
+
+        items_result = await db.execute(
+            select(OrderItem).where(OrderItem.order_id == order.id)
+        )
+        items = items_result.scalars().all()
+        enriched_items = []
+        for item in items:
+            prod_result = await db.execute(
+                select(Product).where(Product.id == item.product_id)
+            )
+            product = prod_result.scalar_one_or_none()
+            enriched_items.append({
+                "id": item.id,
+                "product_id": item.product_id,
+                "product_name": product.name if product else None,
+                "quantity": item.quantity,
+                "price": float(item.price),
+            })
+        enriched.append({
+            "id": order.id,
+            "user_id": order.user_id,
+            "username": user.username if user else None,
+            "status": order.status,
+            "total_price": float(order.total_price),
+            "created_at": order.created_at,
+            "items": enriched_items,
+        })
+    return enriched
+
+
+async def get_pending_count(db: AsyncSession):
+    result = await db.execute(
+        select(Order).where(Order.status == "pending")
+    )
+    return len(result.scalars().all())
