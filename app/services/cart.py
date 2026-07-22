@@ -40,6 +40,12 @@ async def add_to_cart(user_id: int, data: CartItemCreate, db: AsyncSession):
             detail="Товар не найден"
         )
 
+    if product.stock < data.quantity:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Недостаточно товара на складе"
+        )
+
     existing = await db.execute(
         select(Cart).where(
             Cart.user_id == user_id,
@@ -58,6 +64,8 @@ async def add_to_cart(user_id: int, data: CartItemCreate, db: AsyncSession):
         )
         db.add(item)
 
+    product.stock -= data.quantity
+
     await db.commit()
     await db.refresh(item)
     return item
@@ -74,7 +82,21 @@ async def update_cart_item(item_id: int, user_id: int, data: CartItemUpdate, db:
             detail="Элемент корзины не найден"
         )
 
+    prod_result = await db.execute(
+        select(Product).where(Product.id == item.product_id)
+    )
+    product = prod_result.scalar_one_or_none()
+
+    diff = data.quantity - item.quantity
+    if diff > 0 and product.stock < diff:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Недостаточно товара на складе"
+        )
+
     item.quantity = data.quantity
+    product.stock -= diff
+
     await db.commit()
     await db.refresh(item)
     return item
@@ -91,6 +113,13 @@ async def remove_from_cart(item_id: int, user_id: int, db: AsyncSession):
             detail="Элемент корзины не найден"
         )
 
+    prod_result = await db.execute(
+        select(Product).where(Product.id == item.product_id)
+    )
+    product = prod_result.scalar_one_or_none()
+    if product:
+        product.stock += item.quantity
+
     await db.delete(item)
     await db.commit()
     return {"message": "Товар удалён из корзины"}
@@ -102,6 +131,12 @@ async def clear_cart(user_id: int, db: AsyncSession):
     )
     items = result.scalars().all()
     for item in items:
+        prod_result = await db.execute(
+            select(Product).where(Product.id == item.product_id)
+        )
+        product = prod_result.scalar_one_or_none()
+        if product:
+            product.stock += item.quantity
         await db.delete(item)
     await db.commit()
     return {"message": "Корзина очищена"}
