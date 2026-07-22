@@ -77,4 +77,8 @@ export const payments = {
   getOne: (id) => axios.get(`/payments/${id}`, token()),
 }
 
+export const chat = {
+  send: (messages) => axios.post('/chat/', { messages }, tokenJson()),
+}
+
 export default api

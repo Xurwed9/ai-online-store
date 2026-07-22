@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { orders as ordersApi } from '../api/client'
-import { Sun, Moon, LogOut, LayoutDashboard, ShoppingCart, Package, CreditCard } from 'lucide-react'
+import { Sun, Moon, LogOut, LayoutDashboard, ShoppingCart, Package, CreditCard, MessageSquare } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 export default function Navbar() {
@@ -44,6 +44,7 @@ export default function Navbar() {
               {isAdmin && pendingCount > 0 && <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-red text-white text-[10px] font-bold leading-none">{pendingCount}</span>}
             </Link>
             <Link to="/payments" className={`px-3 py-1.5 rounded-lg text-[13px] font-medium no-underline transition-all flex items-center gap-1 ${isActive('/payments') ? 'text-accent bg-accent/10' : 'text-text-secondary hover:text-text hover:bg-border'}`}><CreditCard size={14} />Payments</Link>
+            <Link to="/chat" className={`px-3 py-1.5 rounded-lg text-[13px] font-medium no-underline transition-all flex items-center gap-1 ${isActive('/chat') ? 'text-accent bg-accent/10' : 'text-text-secondary hover:text-text hover:bg-border'}`}><MessageSquare size={14} />AI Chat</Link>
             <Link to="/profile" className={`px-3 py-1.5 rounded-lg text-[13px] font-medium no-underline transition-all ${isActive('/profile') ? 'text-accent bg-accent/10' : 'text-text-secondary hover:text-text hover:bg-border'}`}>Profile</Link>
             <button onClick={logout} className="px-3 py-1.5 rounded-lg text-[13px] font-medium text-red border border-red/20 bg-red/10 hover:bg-red/15 cursor-pointer transition-all flex items-center gap-1.5"><LogOut size={14} />Logout</button>
           </>
