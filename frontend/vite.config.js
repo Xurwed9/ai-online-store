@@ -13,6 +13,7 @@ export default defineConfig({
       '/cart': 'http://127.0.0.1:8000',
       '/orders': 'http://127.0.0.1:8000',
       '/payments': 'http://127.0.0.1:8000',
+      '/chat': 'http://127.0.0.1:8000',
     }
   }
 })
