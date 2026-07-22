@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database.database import get_db
-from app.schemas.user import UserCreate, UserLogin, UserResponse,VerifyEmailSchema
+from app.schemas.user import UserCreate, UserLogin, UserResponse, VerifyEmailSchema, UserPreferencesUpdate
 from app.services.auth import register, login
 from app.core.dependencies import get_current_user, get_current_admin
 from app.models.models import User
@@ -11,13 +11,16 @@ from sqlalchemy import select
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
+
 @router.post("/register")
 async def register_user(data: UserCreate, db: AsyncSession = Depends(get_db)):
     return await register(data, db)
 
+
 @router.post("/login")
-async def login_user(form_data: OAuth2PasswordRequestForm = Depends(),db: AsyncSession = Depends(get_db)):
+async def login_user(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
     return await login(form_data.username, form_data.password, db)
+
 
 @router.get("/me")
 async def get_me(current_user: User = Depends(get_current_user)):
@@ -26,16 +29,31 @@ async def get_me(current_user: User = Depends(get_current_user)):
         "username": current_user.username,
         "email": current_user.email,
         "role": current_user.role,
+        "preferences": current_user.preferences,
     }
+
+
+@router.put("/preferences")
+async def update_preferences(
+    data: UserPreferencesUpdate,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    current_user.preferences = data.preferences
+    await db.commit()
+    await db.refresh(current_user)
+    return {"message": "Предпочтения обновлены", "preferences": current_user.preferences}
+
 
 @router.post("/logout")
 async def logout_user(current_user: User = Depends(get_current_user)):
     return {"message": "Successfully logged out"}
 
+
 @router.get("/admin-dashboard")
 async def admin_dashboard(admin: User = Depends(get_current_admin)):
-
     return {"message": f"Welcome back, Admin {admin.username}!"}
+
 
 @router.post("/verify-email")
 async def verify_email(data: VerifyEmailSchema, db: AsyncSession = Depends(get_db)):

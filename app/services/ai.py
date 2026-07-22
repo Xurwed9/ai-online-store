@@ -61,8 +61,18 @@ async def chat_with_ai(
     Принимает историю сообщений, возвращает ответ.
     Может вызывать MCP-инструменты для работы с БД.
     """
+    from sqlalchemy import select
+    from app.models.models import User
+
+    user_result = await db.execute(select(User).where(User.id == user_id))
+    user = user_result.scalar_one_or_none()
+    user_preferences = user.preferences if user and user.preferences else None
+
     tools_desc = get_tools_description()
     system_msg = SYSTEM_PROMPT.format(tools=tools_desc)
+
+    if user_preferences:
+        system_msg += f"\n\nПРЕДПОЧТЕНИЯ ПОЛЬЗОВАТЕЛЯ: {user_preferences}"
 
     full_messages = [{"role": "system", "content": system_msg}] + messages
 
