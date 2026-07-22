@@ -8,6 +8,7 @@ from app.api.product import router as products_router
 from app.api.cart import router as cart_router
 from app.api.order import router as order_router
 from app.api.payment import router as payment_router
+from app.api.chat import router as chat_router
 
 app = FastAPI(title="AI Assistant Store")
 
@@ -25,6 +26,7 @@ app.include_router(products_router)
 app.include_router(cart_router)
 app.include_router(order_router)
 app.include_router(payment_router)
+app.include_router(chat_router)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
