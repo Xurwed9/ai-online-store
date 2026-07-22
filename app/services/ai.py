@@ -8,7 +8,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = AsyncOpenAI(
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1",
+)
 
 SYSTEM_PROMPT = """Ты — AI-ассистент онлайн-магазина одежды и обуви. Твоя задача — помогать пользователям находить товары, отвечать на вопросы о наличии, ценах и помогать оформлять заказы.
 
@@ -64,7 +67,7 @@ async def chat_with_ai(
     full_messages = [{"role": "system", "content": system_msg}] + messages
 
     response = await client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama-3.3-70b-versatile",
         messages=full_messages,
         temperature=0.7,
         max_tokens=1500,
@@ -92,7 +95,7 @@ async def chat_with_ai(
             ]
 
             followup_response = await client.chat.completions.create(
-                model="gpt-4o-mini",
+                model="llama-3.3-70b-versatile",
                 messages=followup_messages,
                 temperature=0.7,
                 max_tokens=1500,
