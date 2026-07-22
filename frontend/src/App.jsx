@@ -12,6 +12,7 @@ import Profile from './pages/Profile'
 import Cart from './pages/Cart'
 import ProductDetail from './pages/ProductDetail'
 import Orders from './pages/Orders'
+import Payments from './pages/Payments'
 
 function Protected({ children }) {
   const { user, loading } = useAuth()
@@ -48,6 +49,7 @@ export default function App() {
         <Route path="/categories" element={<Protected><Categories /></Protected>} />
         <Route path="/cart" element={<Protected><Cart /></Protected>} />
         <Route path="/orders" element={<Protected><Orders /></Protected>} />
+        <Route path="/payments" element={<Protected><Payments /></Protected>} />
         <Route path="/profile" element={<Protected><Profile /></Protected>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

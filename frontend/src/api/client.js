@@ -70,4 +70,11 @@ export const orders = {
   pendingCount: () => axios.get('/orders/pending-count', token()),
 }
 
+export const payments = {
+  create: (data) => axios.post('/payments/', data, tokenJson()),
+  getAll: () => axios.get('/payments/', token()),
+  getAllAdmin: () => axios.get('/payments/all', token()),
+  getOne: (id) => axios.get(`/payments/${id}`, token()),
+}
+
 export default api

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { orders as ordersApi } from '../api/client'
+import { payments as paymentsApi } from '../api/client'
 import { useAuth } from '../context/AuthContext'
 import { toast } from 'react-hot-toast'
-import { Package, Clock, CheckCircle, Truck, XCircle, ChevronDown, ChevronUp } from 'lucide-react'
+import { Package, Clock, CheckCircle, Truck, XCircle, ChevronDown, ChevronUp, CreditCard } from 'lucide-react'
 
 const statusConfig = {
   pending: { icon: <Clock size={14} />, label: 'Pending', color: 'bg-yellow/10 text-yellow border-yellow/15' },
@@ -31,6 +32,16 @@ export default function Orders() {
     if (!confirm('Cancel this order?')) return
     try { await ordersApi.cancel(id); toast.success('Order cancelled'); load() }
     catch (err) { toast.error(err?.response?.data?.detail || 'Cancel failed') }
+  }
+
+  const handlePay = async (orderId) => {
+    try {
+      await paymentsApi.create({ order_id: orderId, method: 'card' })
+      toast.success('Payment completed')
+      load()
+    } catch (err) {
+      toast.error(err?.response?.data?.detail || 'Payment failed')
+    }
   }
 
   const handleStatus = async (id, status) => {
@@ -94,7 +105,10 @@ export default function Orders() {
                         {o.created_at ? new Date(o.created_at).toLocaleDateString() : ''}
                       </span>
                       {["pending", "confirmed"].includes(o.status) && !isAdmin && (
-                        <button onClick={() => handleCancel(o.id)} className="text-[12px] px-3 py-1 rounded-lg bg-red/10 border border-red/15 text-red cursor-pointer hover:bg-red/15 transition-all">Cancel</button>
+                        <>
+                          <button onClick={() => handleCancel(o.id)} className="text-[12px] px-3 py-1 rounded-lg bg-red/10 border border-red/15 text-red cursor-pointer hover:bg-red/15 transition-all">Cancel</button>
+                          <button onClick={() => handlePay(o.id)} className="text-[12px] px-3 py-1 rounded-lg bg-green/10 border border-green/15 text-green cursor-pointer hover:bg-green/15 transition-all flex items-center gap-1"><CreditCard size={12} />Pay</button>
+                        </>
                       )}
                     </div>
                   </div>
