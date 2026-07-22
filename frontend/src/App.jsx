@@ -8,6 +8,7 @@ import VerifyEmail from './pages/VerifyEmail'
 import Dashboard from './pages/Dashboard'
 import Products from './pages/Products'
 import Categories from './pages/Categories'
+import Profile from './pages/Profile'
 
 function Protected({ children }) {
   const { user, loading } = useAuth()
@@ -15,10 +16,18 @@ function Protected({ children }) {
   return user ? children : <Navigate to="/login" replace />
 }
 
+function AdminOnly({ children }) {
+  const { user, loading } = useAuth()
+  if (loading) return <div className="flex-1 flex items-center justify-center"><div className="text-text-muted text-sm animate-pulse">Loading...</div></div>
+  if (!user) return <Navigate to="/login" replace />
+  if (user.role !== 'admin') return <Navigate to="/profile" replace />
+  return children
+}
+
 function Guest({ children }) {
   const { user, loading } = useAuth()
   if (loading) return <div className="flex-1 flex items-center justify-center"><div className="text-text-muted text-sm animate-pulse">Loading...</div></div>
-  return user ? <Navigate to="/dashboard" replace /> : children
+  return user ? <Navigate to={user.role === 'admin' ? '/dashboard' : '/products'} replace /> : children
 }
 
 export default function App() {
@@ -30,9 +39,10 @@ export default function App() {
         <Route path="/login" element={<Guest><Login /></Guest>} />
         <Route path="/register" element={<Guest><Register /></Guest>} />
         <Route path="/verify-email" element={<Guest><VerifyEmail /></Guest>} />
-        <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
+        <Route path="/dashboard" element={<AdminOnly><Dashboard /></AdminOnly>} />
         <Route path="/products" element={<Protected><Products /></Protected>} />
         <Route path="/categories" element={<Protected><Categories /></Protected>} />
+        <Route path="/profile" element={<Protected><Profile /></Protected>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>

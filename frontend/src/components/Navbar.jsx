@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 export default function Navbar() {
   const { user, logout } = useAuth()
   const location = useLocation()
+  const isAdmin = user?.role === 'admin'
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light')
 
   useEffect(() => {
@@ -25,9 +26,10 @@ export default function Navbar() {
       <div className="flex items-center gap-1.5">
         {user ? (
           <>
-            <Link to="/dashboard" className={`px-3 py-1.5 rounded-lg text-[13px] font-medium no-underline transition-all ${isActive('/dashboard') ? 'text-accent bg-accent/10' : 'text-text-secondary hover:text-text hover:bg-border'}`}>Dashboard</Link>
+            {isAdmin && <Link to="/dashboard" className={`px-3 py-1.5 rounded-lg text-[13px] font-medium no-underline transition-all ${isActive('/dashboard') ? 'text-accent bg-accent/10' : 'text-text-secondary hover:text-text hover:bg-border'}`}>Dashboard</Link>}
             <Link to="/products" className={`px-3 py-1.5 rounded-lg text-[13px] font-medium no-underline transition-all ${isActive('/products') ? 'text-accent bg-accent/10' : 'text-text-secondary hover:text-text hover:bg-border'}`}>Products</Link>
             <Link to="/categories" className={`px-3 py-1.5 rounded-lg text-[13px] font-medium no-underline transition-all ${isActive('/categories') ? 'text-accent bg-accent/10' : 'text-text-secondary hover:text-text hover:bg-border'}`}>Categories</Link>
+            <Link to="/profile" className={`px-3 py-1.5 rounded-lg text-[13px] font-medium no-underline transition-all ${isActive('/profile') ? 'text-accent bg-accent/10' : 'text-text-secondary hover:text-text hover:bg-border'}`}>Profile</Link>
             <button onClick={logout} className="px-3 py-1.5 rounded-lg text-[13px] font-medium text-red border border-red/20 bg-red/10 hover:bg-red/15 cursor-pointer transition-all flex items-center gap-1.5"><LogOut size={14} />Logout</button>
           </>
         ) : (

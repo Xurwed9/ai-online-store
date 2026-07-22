@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { toast } from 'react-hot-toast'
 import { LogIn } from 'lucide-react'
 
 export default function Login() {
-  const { login } = useAuth()
+  const { login, user } = useAuth()
   const navigate = useNavigate()
   const [form, setForm] = useState({ username: '', password: '' })
   const [loading, setLoading] = useState(false)
@@ -16,13 +16,16 @@ export default function Login() {
     try {
       await login(form.username, form.password)
       toast.success('Welcome back!')
-      navigate('/dashboard')
     } catch (err) {
       toast.error(err?.response?.data?.detail || 'Login failed')
     } finally {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (user) navigate(user.role === 'admin' ? '/dashboard' : '/products')
+  }, [user, navigate])
 
   return (
     <div className="flex-1 flex items-center justify-center px-5 py-10">
