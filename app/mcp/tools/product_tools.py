@@ -21,9 +21,9 @@ async def search_products(
         cat_result = await db.execute(
             select(Category).where(Category.name.ilike(f"%{category}%"))
         )
-    cat = cat_result.scalar_one_or_none()
-    if cat:
-        filters.append(Product.category_id == cat.id)
+        cat = cat_result.scalar_one_or_none()
+        if cat:
+            filters.append(Product.category_id == cat.id)
 
     if color:
         filters.append(Product.color.ilike(f"%{color}%"))
