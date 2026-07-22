@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { products as productsApi, cart as cartApi, categories as categoriesApi } from '../api/client'
+import { products as productsApi, cart as cartApi } from '../api/client'
 import { useAuth } from '../context/AuthContext'
 import { toast } from 'react-hot-toast'
 import { ArrowLeft, ShoppingCart, Package, Minus, Plus, Check } from 'lucide-react'
@@ -10,25 +10,16 @@ export default function ProductDetail() {
   const { user } = useAuth()
   const isAdmin = user?.role === 'admin'
   const [product, setProduct] = useState(null)
-  const [category, setCategory] = useState(null)
   const [loading, setLoading] = useState(true)
   const [qty, setQty] = useState(1)
   const [adding, setAdding] = useState(false)
   const [added, setAdded] = useState(false)
 
   useEffect(() => {
-    const load = async () => {
-      try {
-        const r = await productsApi.getOne(id)
-        setProduct(r.data)
-        if (r.data.category_id) {
-          const c = await categoriesApi.getOne(r.data.category_id)
-          setCategory(c.data)
-        }
-      } catch { toast.error('Product not found') }
-      finally { setLoading(false) }
-    }
-    load()
+    productsApi.getOne(id)
+      .then(r => setProduct(r.data))
+      .catch(() => toast.error('Product not found'))
+      .finally(() => setLoading(false))
   }, [id])
 
   const handleAddToCart = async () => {
@@ -62,9 +53,6 @@ export default function ProductDetail() {
         </div>
 
         <div className="flex flex-col py-2">
-          {category && (
-            <span className="inline-flex self-start px-2.5 py-1 rounded-md text-[11px] font-semibold bg-accent/10 text-accent border border-accent/15 mb-3">{category.name}</span>
-          )}
           <h1 className="font-display text-[32px] leading-tight mb-3">{product.name}</h1>
           <p className="text-[15px] text-text-secondary leading-relaxed mb-6">{product.description || 'No description available.'}</p>
 
