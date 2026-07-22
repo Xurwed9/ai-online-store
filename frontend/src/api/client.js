@@ -60,4 +60,12 @@ export const cart = {
   clear: () => axios.delete('/cart/', token()),
 }
 
+export const orders = {
+  create: () => axios.post('/orders/', {}, token()),
+  getAll: () => axios.get('/orders/', token()),
+  getOne: (id) => axios.get(`/orders/${id}`, token()),
+  cancel: (id) => axios.post(`/orders/${id}/cancel`, {}, token()),
+  updateStatus: (id, status) => axios.put(`/orders/${id}/status`, { status }, tokenJson()),
+}
+
 export default api

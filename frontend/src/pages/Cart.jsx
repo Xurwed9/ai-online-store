@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
-import { cart as cartApi } from '../api/client'
+import { useNavigate } from 'react-router-dom'
+import { cart as cartApi, orders as ordersApi } from '../api/client'
 import { toast } from 'react-hot-toast'
 import { Trash2, Minus, Plus, ShoppingBag } from 'lucide-react'
 
 export default function Cart() {
+  const navigate = useNavigate()
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
+  const [checkoutLoading, setCheckoutLoading] = useState(false)
 
   const load = async () => {
     try {
@@ -32,6 +35,17 @@ export default function Cart() {
     if (!confirm('Clear entire cart?')) return
     try { await cartApi.clear(); toast.success('Cart cleared'); setItems([]) }
     catch { toast.error('Clear failed') }
+  }
+
+  const handleCheckout = async () => {
+    setCheckoutLoading(true)
+    try {
+      await ordersApi.create()
+      toast.success('Order placed!')
+      navigate('/orders')
+    } catch (err) {
+      toast.error(err?.response?.data?.detail || 'Checkout failed')
+    } finally { setCheckoutLoading(false) }
   }
 
   const total = items.reduce((sum, i) => sum + (i.product_price || 0) * i.quantity, 0)
@@ -83,7 +97,7 @@ export default function Cart() {
               <span className="font-display text-lg">Total</span>
               <span className="font-display text-xl">${total.toFixed(2)}</span>
             </div>
-            <button className="w-full py-3 rounded-xl bg-text text-bg text-sm font-semibold cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all">Checkout</button>
+            <button onClick={handleCheckout} disabled={checkoutLoading} className="w-full py-3 rounded-xl bg-text text-bg text-sm font-semibold cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all disabled:opacity-50">{checkoutLoading ? 'Placing order...' : 'Checkout'}</button>
           </div>
         </>
       )}

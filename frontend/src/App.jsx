@@ -11,6 +11,7 @@ import Categories from './pages/Categories'
 import Profile from './pages/Profile'
 import Cart from './pages/Cart'
 import ProductDetail from './pages/ProductDetail'
+import Orders from './pages/Orders'
 
 function Protected({ children }) {
   const { user, loading } = useAuth()
@@ -46,6 +47,7 @@ export default function App() {
         <Route path="/products/:id" element={<Protected><ProductDetail /></Protected>} />
         <Route path="/categories" element={<Protected><Categories /></Protected>} />
         <Route path="/cart" element={<Protected><Cart /></Protected>} />
+        <Route path="/orders" element={<Protected><Orders /></Protected>} />
         <Route path="/profile" element={<Protected><Profile /></Protected>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
