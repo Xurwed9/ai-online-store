@@ -3,6 +3,7 @@ from sqlalchemy import select
 from app.models.order import Order, OrderItem
 from app.models.cart import Cart
 from app.models.product import Product
+from app.models.purchase_history import PurchaseHistory
 
 
 async def create_order(user_id: int, db: AsyncSession) -> dict:
@@ -43,6 +44,15 @@ async def create_order(user_id: int, db: AsyncSession) -> dict:
         )
         db.add(order_item)
         product.stock -= ci.quantity
+
+        purchase_record = PurchaseHistory(
+            user_id=user_id,
+            product_id=ci.product_id,
+            order_id=order.id,
+            quantity=ci.quantity,
+            price=float(product.price),
+        )
+        db.add(purchase_record)
 
         order_items_data.append({
             "product_name": product.name,
