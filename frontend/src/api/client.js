@@ -1,0 +1,51 @@
+import axios from 'axios'
+
+const api = axios.create({ baseURL: '/auth', headers: { 'Content-Type': 'application/json' } })
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token')
+  if (token) config.headers.Authorization = `Bearer ${token}`
+  return config
+})
+
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (err.response?.status === 401) {
+      localStorage.removeItem('token')
+      if (window.location.pathname !== '/login') window.location.href = '/login'
+    }
+    return Promise.reject(err)
+  }
+)
+
+export const auth = {
+  register: (data) => api.post('/register', data),
+  login: (username, password) => {
+    const body = new URLSearchParams({ username, password })
+    return axios.post('/auth/login', body, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+  },
+  logout: () => api.post('/logout'),
+  verifyEmail: (data) => api.post('/verify-email', data),
+  dashboard: () => api.get('/admin-dashboard'),
+}
+
+export const products = {
+  getAll: () => axios.get('/products/', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }),
+  getOne: (id) => axios.get(`/products/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }),
+  search: (q) => axios.get(`/products/search?q=${encodeURIComponent(q)}`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }),
+  getByCategory: (id) => axios.get(`/products/category/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }),
+  create: (data) => axios.post('/products/', data, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' } }),
+  update: (id, data) => axios.put(`/products/${id}`, data, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' } }),
+  delete: (id) => axios.delete(`/products/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }),
+}
+
+export const categories = {
+  getAll: () => axios.get('/categories/', { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }),
+  getOne: (id) => axios.get(`/categories/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }),
+  create: (data) => axios.post('/categories/', data, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' } }),
+  update: (id, data) => axios.put(`/categories/${id}`, data, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' } }),
+  delete: (id) => axios.delete(`/categories/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }),
+}
+
+export default api
