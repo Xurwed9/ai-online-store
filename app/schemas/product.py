@@ -6,6 +6,8 @@ class ProductCreate(BaseModel):
     name: str
     description: str | None = None
     price: Decimal
+    color: str | None = None
+    size: str | None = None
     stock: int = 0
     image_url: str | None = None
     is_active: bool = True
@@ -17,6 +19,8 @@ class ProductResponse(BaseModel):
     name: str
     description: str | None
     price: Decimal
+    color: str | None
+    size: str | None
     stock: int
     image_url: str | None
     is_active: bool
@@ -29,6 +33,8 @@ class ProductUpdate(BaseModel):
     name: str | None = None
     description: str | None = None
     price: Decimal | None = None
+    color: str | None = None
+    size: str | None = None
     stock: int | None = None
     image_url: str | None = None
     is_active: bool | None = None
