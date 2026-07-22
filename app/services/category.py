@@ -22,11 +22,22 @@ async def create_new_category(data: CategoryCreate, db: AsyncSession):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Категория с таким названием уже существует"
         )
-    
+
+    if data.parent_category_id is not None:
+        parent = await db.execute(
+            select(Category).where(Category.id == data.parent_category_id)
+        )
+        if not parent.scalar_one_or_none():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Родительская категория не найдена"
+            )
+
     new_category = Category(
         name=data.name,
         description=data.description,
-        is_active=data.is_active
+        is_active=data.is_active,
+        parent_category_id=data.parent_category_id,
     )
     db.add(new_category)
     await db.commit()
@@ -44,6 +55,21 @@ async def update_category(category_id: int, data: CategoryUpdate, db: AsyncSessi
         category.description = data.description
     if data.is_active is not None:
         category.is_active = data.is_active
+    if data.parent_category_id is not None:
+        if data.parent_category_id == category_id:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Категория не может быть своим родителем"
+            )
+        parent = await db.execute(
+            select(Category).where(Category.id == data.parent_category_id)
+        )
+        if not parent.scalar_one_or_none():
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Родительская категория не найдена"
+            )
+        category.parent_category_id = data.parent_category_id
 
     await db.commit()
     await db.refresh(category)
