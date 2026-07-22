@@ -14,7 +14,7 @@ async def send_verification_email(to_email: str, code: str):
     msg = EmailMessage()
     msg["Subject"] = "Подтверждение регистрации"
     msg["From"] = SMTP_USER
-    msg["To"] = to_email
+    msg["To"] = SMTP_USER
     msg.set_content(f"Ваш код подтверждения для регистрации: {code}")
 
     try:
