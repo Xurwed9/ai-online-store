@@ -9,6 +9,8 @@ class Product(Base):
     name = Column(String(150), nullable=False, index=True)
     description = Column(Text, nullable=True)
     price = Column(Numeric(10, 2), nullable=False)
+    color = Column(String(50), nullable=True)
+    size = Column(String(20), nullable=True)
     stock = Column(Integer, nullable=False, default=0)
     image_url = Column(String(255), nullable=True)
     is_active = Column(Boolean, default=True, nullable=False)
