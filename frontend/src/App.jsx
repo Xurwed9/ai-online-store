@@ -1,0 +1,40 @@
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { useAuth } from './context/AuthContext'
+import Navbar from './components/Navbar'
+import Landing from './pages/Landing'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import VerifyEmail from './pages/VerifyEmail'
+import Dashboard from './pages/Dashboard'
+import Products from './pages/Products'
+import Categories from './pages/Categories'
+
+function Protected({ children }) {
+  const { user, loading } = useAuth()
+  if (loading) return <div className="flex-1 flex items-center justify-center"><div className="text-text-muted text-sm animate-pulse">Loading...</div></div>
+  return user ? children : <Navigate to="/login" replace />
+}
+
+function Guest({ children }) {
+  const { user, loading } = useAuth()
+  if (loading) return <div className="flex-1 flex items-center justify-center"><div className="text-text-muted text-sm animate-pulse">Loading...</div></div>
+  return user ? <Navigate to="/dashboard" replace /> : children
+}
+
+export default function App() {
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Guest><Login /></Guest>} />
+        <Route path="/register" element={<Guest><Register /></Guest>} />
+        <Route path="/verify-email" element={<Guest><VerifyEmail /></Guest>} />
+        <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
+        <Route path="/products" element={<Protected><Products /></Protected>} />
+        <Route path="/categories" element={<Protected><Categories /></Protected>} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </div>
+  )
+}
