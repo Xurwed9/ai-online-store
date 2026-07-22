@@ -1,6 +1,7 @@
 from app.mcp.tools.product_tools import search_products, get_product_details, check_stock, get_all_categories
 from app.mcp.tools.cart_tools import add_to_cart, get_cart
 from app.mcp.tools.order_tools import create_order, get_order_status, get_user_orders
+from app.mcp.tools.recommendation_tools import recommend_products, get_similar_products
 
 
 MCP_TOOLS = {
@@ -69,6 +70,20 @@ MCP_TOOLS = {
         "description": "Получить все заказы пользователя",
         "parameters": {
             "user_id": "ID пользователя (число)",
+        },
+    },
+    "recommend_products": {
+        "function": recommend_products,
+        "description": "Рекомендовать товары на основе истории покупок пользователя",
+        "parameters": {
+            "user_id": "ID пользователя (число)",
+        },
+    },
+    "get_similar_products": {
+        "function": get_similar_products,
+        "description": "Найти похожие товары из той же категории",
+        "parameters": {
+            "product_id": "ID товара (число)",
         },
     },
 }
