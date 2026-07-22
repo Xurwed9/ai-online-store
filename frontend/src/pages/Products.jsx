@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { products as productsApi, categories as categoriesApi } from '../api/client'
+import { useAuth } from '../context/AuthContext'
 import { toast } from 'react-hot-toast'
 import Modal from '../components/Modal'
 import { Search, Plus, Pencil, Trash2, Package } from 'lucide-react'
@@ -7,6 +8,8 @@ import { Search, Plus, Pencil, Trash2, Package } from 'lucide-react'
 const empty = { name: '', description: '', price: '', color: '', size: '', stock: 0, image_url: '', category_id: '' }
 
 export default function Products() {
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'admin'
   const [items, setItems] = useState([])
   const [cats, setCats] = useState([])
   const [query, setQuery] = useState('')
@@ -58,7 +61,7 @@ export default function Products() {
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
             <input type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search..." className="pl-8 pr-3 py-2 bg-surface border border-border rounded-xl text-[13px] text-text outline-none w-[220px] transition-all focus:border-accent focus:shadow-[0_0_0_3px_rgba(196,93,62,.12)]" />
           </div>
-          <button onClick={openCreate} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-text text-bg text-sm font-semibold cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all"><Plus size={15} />Add</button>
+          {isAdmin && <button onClick={openCreate} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-text text-bg text-sm font-semibold cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all"><Plus size={15} />Add</button>}
         </div>
       </div>
 
@@ -80,10 +83,10 @@ export default function Products() {
                   <span className="text-lg font-bold text-text">${Number(p.price).toFixed(2)}</span>
                   <span className="text-[11px] text-text-muted px-2 py-0.5 rounded-md bg-bg">{p.stock > 0 ? `${p.stock} in stock` : 'Out of stock'}</span>
                 </div>
-                <div className="flex gap-2">
+                {isAdmin && <div className="flex gap-2">
                   <button onClick={() => openEdit(p)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-surface border border-border text-text text-xs font-medium cursor-pointer hover:bg-bg hover:border-border-strong transition-all"><Pencil size={13} />Edit</button>
                   <button onClick={() => handleDelete(p.id)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-red/10 border border-red/15 text-red text-xs font-medium cursor-pointer hover:bg-red/15 transition-all"><Trash2 size={13} />Delete</button>
-                </div>
+                </div>}
               </div>
             </div>
           ))}

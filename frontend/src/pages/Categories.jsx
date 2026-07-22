@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react'
 import { categories as categoriesApi, products as productsApi } from '../api/client'
+import { useAuth } from '../context/AuthContext'
 import { toast } from 'react-hot-toast'
 import Modal from '../components/Modal'
 import { Plus, Pencil, Trash2, FolderOpen } from 'lucide-react'
 
 export default function Categories() {
+  const { user } = useAuth()
+  const isAdmin = user?.role === 'admin'
   const [items, setItems] = useState([])
   const [prods, setProds] = useState([])
   const [modal, setModal] = useState(false)
@@ -48,7 +51,7 @@ export default function Categories() {
     <div className="flex-1 px-8 py-10 max-w-[1100px] mx-auto w-full">
       <div className="flex justify-between items-center mb-7 animate-[slideUp_0.4s_ease]">
         <h1 className="font-display text-[26px] tracking-tight">Categories</h1>
-        <button onClick={openCreate} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-text text-bg text-sm font-semibold cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all"><Plus size={15} />Add</button>
+        {isAdmin && <button onClick={openCreate} className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-text text-bg text-sm font-semibold cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all"><Plus size={15} />Add</button>}
       </div>
 
       {items.length === 0 ? (
@@ -65,10 +68,10 @@ export default function Categories() {
                 </div>
                 <div className="text-[13px] text-text-muted leading-relaxed mb-3.5">{c.description || 'No description'}</div>
                 <div className="text-xs text-text-secondary mb-4"><span className="text-accent font-semibold">{count}</span> products</div>
-                <div className="flex gap-2">
+                {isAdmin && <div className="flex gap-2">
                   <button onClick={() => openEdit(c)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-surface border border-border text-text text-xs font-medium cursor-pointer hover:bg-bg hover:border-border-strong transition-all"><Pencil size={13} />Edit</button>
                   <button onClick={() => handleDelete(c.id)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-red/10 border border-red/15 text-red text-xs font-medium cursor-pointer hover:bg-red/15 transition-all"><Trash2 size={13} />Delete</button>
-                </div>
+                </div>}
               </div>
             )
           })}
