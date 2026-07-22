@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
+import { Link } from 'react-router-dom'
 import { products as productsApi, categories as categoriesApi } from '../api/client'
 import { useAuth } from '../context/AuthContext'
 import { toast } from 'react-hot-toast'
@@ -71,23 +72,25 @@ export default function Products() {
         <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4 animate-[slideUp_0.5s_ease]">
           {items.map(p => (
             <div key={p.id} className="bg-surface border border-border rounded-2xl overflow-hidden transition-all hover:border-border-strong hover:shadow-lg hover:-translate-y-0.5 flex flex-col">
-              <div className="w-full h-[260px] bg-bg-warm relative overflow-hidden">
-                {p.image_url ? <img src={p.image_url} alt={p.name} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 hover:scale-[1.04]" onError={e => { e.target.style.display = 'none' }} /> : <div className="w-full h-full flex items-center justify-center text-4xl opacity-30"><Package size={44} /></div>}
-                {getCatName(p.category_id) && <span className="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[11px] font-semibold bg-surface/90 border border-border text-text-secondary backdrop-blur-sm">{getCatName(p.category_id)}</span>}
-              </div>
-              <div className="p-4.5 flex flex-col flex-1">
-                <div className="text-[15px] font-semibold tracking-tight mb-1">{p.name}</div>
-                <div className="text-[13px] text-text-muted leading-relaxed mb-3 flex-1">{p.description || 'No description'}</div>
-                {(p.color || p.size) && <div className="flex gap-1.5 mb-2.5 flex-wrap">{p.color && <span className="text-[11px] px-2 py-0.5 rounded-md bg-bg border border-border text-text-secondary">{p.color}</span>}{p.size && <span className="text-[11px] px-2 py-0.5 rounded-md bg-bg border border-border text-text-secondary">{p.size}</span>}</div>}
-                <div className="flex justify-between items-center mb-3">
-                  <span className="text-lg font-bold text-text">${Number(p.price).toFixed(2)}</span>
-                  <span className="text-[11px] text-text-muted px-2 py-0.5 rounded-md bg-bg">{p.stock > 0 ? `${p.stock} in stock` : 'Out of stock'}</span>
+              <Link to={`/products/${p.id}`} className="block no-underline text-text">
+                <div className="w-full h-[260px] bg-bg-warm relative overflow-hidden">
+                  {p.image_url ? <img src={p.image_url} alt={p.name} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 hover:scale-[1.04]" onError={e => { e.target.style.display = 'none' }} /> : <div className="w-full h-full flex items-center justify-center text-4xl opacity-30"><Package size={44} /></div>}
+                  {getCatName(p.category_id) && <span className="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[11px] font-semibold bg-surface/90 border border-border text-text-secondary backdrop-blur-sm">{getCatName(p.category_id)}</span>}
                 </div>
-                {isAdmin && <div className="flex gap-2">
+                <div className="p-4.5 flex flex-col flex-1">
+                  <div className="text-[15px] font-semibold tracking-tight mb-1">{p.name}</div>
+                  <div className="text-[13px] text-text-muted leading-relaxed mb-3">{p.description || 'No description'}</div>
+                  {(p.color || p.size) && <div className="flex gap-1.5 mb-2.5 flex-wrap">{p.color && <span className="text-[11px] px-2 py-0.5 rounded-md bg-bg border border-border text-text-secondary">{p.color}</span>}{p.size && <span className="text-[11px] px-2 py-0.5 rounded-md bg-bg border border-border text-text-secondary">{p.size}</span>}</div>}
+                  <div className="flex justify-between items-center">
+                    <span className="text-lg font-bold text-text">${Number(p.price).toFixed(2)}</span>
+                    <span className="text-[11px] text-text-muted px-2 py-0.5 rounded-md bg-bg">{p.stock > 0 ? `${p.stock} in stock` : 'Out of stock'}</span>
+                  </div>
+                </div>
+              </Link>
+              {isAdmin && <div className="px-4.5 pb-4.5 flex gap-2">
                   <button onClick={() => openEdit(p)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-surface border border-border text-text text-xs font-medium cursor-pointer hover:bg-bg hover:border-border-strong transition-all"><Pencil size={13} />Edit</button>
                   <button onClick={() => handleDelete(p.id)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-red/10 border border-red/15 text-red text-xs font-medium cursor-pointer hover:bg-red/15 transition-all"><Trash2 size={13} />Delete</button>
-                </div>}
-              </div>
+              </div>}
             </div>
           ))}
         </div>
