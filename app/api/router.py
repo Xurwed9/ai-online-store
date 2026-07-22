@@ -19,6 +19,15 @@ async def register_user(data: UserCreate, db: AsyncSession = Depends(get_db)):
 async def login_user(form_data: OAuth2PasswordRequestForm = Depends(),db: AsyncSession = Depends(get_db)):
     return await login(form_data.username, form_data.password, db)
 
+@router.get("/me")
+async def get_me(current_user: User = Depends(get_current_user)):
+    return {
+        "id": current_user.id,
+        "username": current_user.username,
+        "email": current_user.email,
+        "role": current_user.role,
+    }
+
 @router.post("/logout")
 async def logout_user(current_user: User = Depends(get_current_user)):
     return {"message": "Successfully logged out"}

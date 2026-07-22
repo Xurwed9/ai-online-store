@@ -10,9 +10,8 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (token) {
-      auth.dashboard().then(res => {
-        const name = res.data.message.replace('Welcome back, Admin ', '').split('!')[0]
-        setUser({ name, token })
+      auth.me().then(res => {
+        setUser({ ...res.data, token })
       }).catch(() => {
         localStorage.removeItem('token')
       }).finally(() => setLoading(false))
@@ -29,9 +28,8 @@ export function AuthProvider({ children }) {
   const login = async (username, password) => {
     const res = await auth.login(username, password)
     localStorage.setItem('token', res.data.access_token)
-    const dash = await auth.dashboard()
-    const name = dash.data.message.replace('Welcome back, Admin ', '').split('!')[0]
-    setUser({ name, token: res.data.access_token })
+    const me = await auth.me()
+    setUser({ ...me.data, token: res.data.access_token })
     return res.data
   }
 

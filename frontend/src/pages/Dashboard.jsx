@@ -28,7 +28,7 @@ export default function Dashboard() {
   return (
     <div className="flex-1 px-8 py-10 max-w-[1100px] mx-auto w-full">
       <div className="mb-9 animate-[slideUp_0.4s_ease]">
-        <h1 className="font-display text-[34px] tracking-[-0.5px] mb-1">Welcome, <span className="text-accent">{user?.name || 'User'}</span></h1>
+        <h1 className="font-display text-[34px] tracking-[-0.5px] mb-1">Welcome, <span className="text-accent">{user?.username || 'User'}</span></h1>
         <p className="text-[15px] text-text-secondary">Manage your store with AI-powered tools</p>
       </div>
       <div className="grid grid-cols-4 gap-3.5 mb-10 animate-[slideUp_0.5s_ease]">

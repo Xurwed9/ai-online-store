@@ -25,6 +25,7 @@ export const auth = {
     const body = new URLSearchParams({ username, password })
     return axios.post('/auth/login', body, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
   },
+  me: () => api.get('/me'),
   logout: () => api.post('/logout'),
   verifyEmail: (data) => api.post('/verify-email', data),
   dashboard: () => api.get('/admin-dashboard'),
