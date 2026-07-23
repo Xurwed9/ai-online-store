@@ -1,7 +1,7 @@
 from app.mcp.tools.product_tools import search_products, get_product_details, check_stock, get_all_categories
-from app.mcp.tools.cart_tools import add_to_cart, get_cart
+from app.mcp.tools.cart_tools import add_to_cart, get_cart, remove_from_cart, update_cart_quantity, get_cart_total
 from app.mcp.tools.order_tools import create_order, get_order_status, get_user_orders
-from app.mcp.tools.recommendation_tools import recommend_products, get_similar_products
+from app.mcp.tools.recommendation_tools import recommend_products, get_similar_products, get_frequently_bought_together
 
 
 MCP_TOOLS = {
@@ -43,9 +43,33 @@ MCP_TOOLS = {
             "quantity": "Количество (число, по умолчанию 1)",
         },
     },
+    "update_cart_quantity": {
+        "function": update_cart_quantity,
+        "description": "Изменить количество товара в корзине (0 = удалить)",
+        "parameters": {
+            "user_id": "ID пользователя (число)",
+            "product_id": "ID товара (число)",
+            "quantity": "Новое количество (число)",
+        },
+    },
+    "remove_from_cart": {
+        "function": remove_from_cart,
+        "description": "Удалить товар из корзины",
+        "parameters": {
+            "user_id": "ID пользователя (число)",
+            "product_id": "ID товара (число)",
+        },
+    },
     "get_cart": {
         "function": get_cart,
         "description": "Получить содержимое корзины пользователя",
+        "parameters": {
+            "user_id": "ID пользователя (число)",
+        },
+    },
+    "get_cart_total": {
+        "function": get_cart_total,
+        "description": "Получить итого корзины со скидками (5+ товаров = 5%, 10+ = 10%, >$500 = 7%)",
         "parameters": {
             "user_id": "ID пользователя (число)",
         },
@@ -82,6 +106,13 @@ MCP_TOOLS = {
     "get_similar_products": {
         "function": get_similar_products,
         "description": "Найти похожие товары из той же категории",
+        "parameters": {
+            "product_id": "ID товара (число)",
+        },
+    },
+    "get_frequently_bought_together": {
+        "function": get_frequently_bought_together,
+        "description": "Показать товары, которые часто покупают вместе с указанным",
         "parameters": {
             "product_id": "ID товара (число)",
         },
