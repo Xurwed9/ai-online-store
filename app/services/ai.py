@@ -7,18 +7,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.mcp.server import get_tools_description, get_tool_function
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
 
 logger = logging.getLogger(__name__)
 
-groq_api_key = os.getenv("GROQ_API_KEY")
-if not groq_api_key:
-    logger.warning("GROQ_API_KEY is not set in environment variables")
+GROQ_BASE_URL = "https://api.groq.com/openai/v1"
+GROQ_MODEL = "llama-3.3-70b-versatile"
 
-client = AsyncOpenAI(
-    api_key=groq_api_key or "missing",
-    base_url="https://api.groq.com/openai/v1",
-)
+
+def _get_client() -> AsyncOpenAI:
+    api_key = os.getenv("GROQ_API_KEY", "")
+    return AsyncOpenAI(api_key=api_key, base_url=GROQ_BASE_URL)
 
 SYSTEM_PROMPT = """Ты — AI-ассистент онлайн-магазина одежды и обуви. Твоя задача — помогать пользователям находить товары, отвечать на вопросы о наличии, ценах и помогать оформлять заказы.
 
@@ -88,8 +87,8 @@ async def chat_with_ai(
     full_messages = [{"role": "system", "content": system_msg}] + messages
 
     try:
-        response = await client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+        response = await _get_client().chat.completions.create(
+            model=GROQ_MODEL,
             messages=full_messages,
             temperature=0.7,
             max_tokens=1500,
@@ -146,8 +145,8 @@ async def chat_with_ai(
             ]
 
             try:
-                followup_response = await client.chat.completions.create(
-                    model="llama-3.3-70b-versatile",
+                followup_response = await _get_client().chat.completions.create(
+                    model=GROQ_MODEL,
                     messages=followup_messages,
                     temperature=0.7,
                     max_tokens=1500,
