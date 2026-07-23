@@ -139,3 +139,61 @@ async def get_similar_products(product_id: int, db: AsyncSession) -> list[dict]:
         }
         for p in similar
     ]
+
+
+async def get_frequently_bought_together(product_id: int, db: AsyncSession) -> list[dict]:
+    """Найти товары, которые часто покупают вместе с указанным.
+
+    Анализирует purchase_history: находит другие заказы, в которых
+    есть данный товар, и считает какие товары встречаются чаще всего.
+    """
+    if db is None:
+        return []
+
+    prod_result = await db.execute(
+        select(Product).where(Product.id == product_id)
+    )
+    product = prod_result.scalar_one_or_none()
+    if not product:
+        return []
+
+    orders_with_product = await db.execute(
+        select(PurchaseHistory.order_id)
+        .where(PurchaseHistory.product_id == product_id, PurchaseHistory.order_id.isnot(None))
+        .distinct()
+    )
+    order_ids = [row[0] for row in orders_with_product.fetchall()]
+
+    if not order_ids:
+        return []
+
+    other_purchases = await db.execute(
+        select(PurchaseHistory.product_id, sql_func.sum(PurchaseHistory.quantity).label("total_qty"))
+        .where(
+            PurchaseHistory.order_id.in_(order_ids),
+            PurchaseHistory.product_id != product_id,
+        )
+        .group_by(PurchaseHistory.product_id)
+        .order_by(sql_func.sum(PurchaseHistory.quantity).desc())
+        .limit(5)
+    )
+    frequent = other_purchases.fetchall()
+
+    results = []
+    for product_id_fbt, total_qty in frequent:
+        prod = await db.execute(
+            select(Product).where(Product.id == product_id_fbt, Product.is_active == True)
+        )
+        p = prod.scalar_one_or_none()
+        if p and p.stock > 0:
+            results.append({
+                "id": p.id,
+                "name": p.name,
+                "price": float(p.price),
+                "color": p.color,
+                "size": p.size,
+                "times_bought_together": int(total_qty),
+                "reason": f"Часто покупают вместе с «{product.name}»",
+            })
+
+    return results
