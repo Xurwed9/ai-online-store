@@ -4,7 +4,6 @@ from app.models.order import Order, OrderItem
 from app.models.cart import Cart
 from app.models.product import Product
 from app.models.purchase_history import PurchaseHistory
-from app.services.user import update_preferences_from_history
 
 
 async def create_order(user_id: int, db: AsyncSession) -> dict:
@@ -66,6 +65,7 @@ async def create_order(user_id: int, db: AsyncSession) -> dict:
     await db.commit()
     await db.refresh(order)
 
+    from app.services.user import update_preferences_from_history
     await update_preferences_from_history(user_id, db)
 
     return {
