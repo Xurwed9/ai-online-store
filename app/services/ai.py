@@ -1,15 +1,22 @@
 import os
 import re
 import json
-from openai import AsyncOpenAI
+import logging
+from openai import AsyncOpenAI, AuthenticationError, APIConnectionError, RateLimitError
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.mcp.server import get_tools_description, get_tool_function
 from dotenv import load_dotenv
 
 load_dotenv()
 
+logger = logging.getLogger(__name__)
+
+groq_api_key = os.getenv("GROQ_API_KEY")
+if not groq_api_key:
+    logger.warning("GROQ_API_KEY is not set in environment variables")
+
 client = AsyncOpenAI(
-    api_key=os.getenv("GROQ_API_KEY"),
+    api_key=groq_api_key or "missing",
     base_url="https://api.groq.com/openai/v1",
 )
 
@@ -80,12 +87,42 @@ async def chat_with_ai(
 
     full_messages = [{"role": "system", "content": system_msg}] + messages
 
-    response = await client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=full_messages,
-        temperature=0.7,
-        max_tokens=1500,
-    )
+    try:
+        response = await client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=full_messages,
+            temperature=0.7,
+            max_tokens=1500,
+        )
+    except AuthenticationError:
+        return {
+            "reply": "Ошибка: невалидный API-ключ GROQ. Проверьте переменную GROQ_API_KEY в файле .env.",
+            "tool_called": None,
+            "tool_result": None,
+            "error": "Invalid GROQ API key",
+        }
+    except APIConnectionError:
+        return {
+            "reply": "Ошибка: не удалось подключиться к API Groq. Проверьте подключение к интернету.",
+            "tool_called": None,
+            "tool_result": None,
+            "error": "Cannot connect to Groq API",
+        }
+    except RateLimitError:
+        return {
+            "reply": "Превышен лимит запросов к AI. Подождите немного и попробуйте снова.",
+            "tool_called": None,
+            "tool_result": None,
+            "error": "Rate limit exceeded",
+        }
+    except Exception as e:
+        logger.exception("Unexpected error in AI chat")
+        return {
+            "reply": "Произошла непредвиденная ошибка при обращении к AI. Попробуйте позже.",
+            "tool_called": None,
+            "tool_result": None,
+            "error": str(e),
+        }
 
     assistant_text = response.choices[0].message.content
 
@@ -108,14 +145,18 @@ async def chat_with_ai(
                 },
             ]
 
-            followup_response = await client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=followup_messages,
-                temperature=0.7,
-                max_tokens=1500,
-            )
+            try:
+                followup_response = await client.chat.completions.create(
+                    model="llama-3.3-70b-versatile",
+                    messages=followup_messages,
+                    temperature=0.7,
+                    max_tokens=1500,
+                )
+                final_text = followup_response.choices[0].message.content
+            except Exception as e:
+                logger.exception("Error in AI followup after tool call")
+                final_text = f"Инструмент {tool_name} вернул результат, но не удалось получить ответ AI: {e}"
 
-            final_text = followup_response.choices[0].message.content
             return {
                 "reply": final_text,
                 "tool_called": tool_name,
