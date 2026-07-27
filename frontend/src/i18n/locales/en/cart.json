@@ -1,0 +1,21 @@
+{
+  "cart": {
+    "title": "Shopping Cart",
+    "empty": "Your cart is empty",
+    "clear": "Clear",
+    "items": "Items ({{count}})",
+    "total": "Total",
+    "checkout": "Checkout",
+    "placing_order": "Placing order...",
+    "loading": "Loading...",
+    "confirm_clear": "Clear entire cart?",
+    "order_placed": "Order placed!",
+    "checkout_failed": "Checkout failed",
+    "load_failed": "Failed to load cart",
+    "update_failed": "Update failed",
+    "removed": "Removed",
+    "remove_failed": "Remove failed",
+    "cart_cleared": "Cart cleared",
+    "clear_failed": "Clear failed"
+  }
+}

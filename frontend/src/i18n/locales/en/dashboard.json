@@ -1,0 +1,129 @@
+{
+  "sidebar": {
+    "ai_store": "AI Store",
+    "sections": {
+      "overview": "OVERVIEW",
+      "management": "MANAGEMENT",
+      "ai_tools": "AI & TOOLS",
+      "system": "SYSTEM"
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "analytics": "Analytics",
+      "products": "Products",
+      "categories": "Categories",
+      "orders": "Orders",
+      "customers": "Customers",
+      "payments": "Payments",
+      "ai_analytics": "AI Analytics",
+      "ai_assistant": "AI Assistant",
+      "inventory": "Inventory",
+      "reviews": "Reviews",
+      "coupons": "Coupons",
+      "settings": "Settings"
+    },
+    "out": "Out"
+  },
+  "topbar": {
+    "dashboard": "Dashboard",
+    "search_placeholder": "Search..."
+  },
+  "welcome": {
+    "title": "Welcome back, {{name}}",
+    "subtitle": "Here's what's happening with your store today."
+  },
+  "stats": {
+    "revenue": "Revenue",
+    "orders": "Orders",
+    "products": "Products",
+    "customers": "Customers",
+    "avg_order": "Avg Order",
+    "pending": "Pending"
+  },
+  "charts": {
+    "sales_trend": "Sales Trend",
+    "revenue_by_category": "Revenue by Category",
+    "order_status": "Order Status",
+    "monthly_revenue": "Monthly Revenue"
+  },
+  "chart_labels": {
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat",
+    "sun": "Sun",
+    "jan": "Jan",
+    "feb": "Feb",
+    "mar": "Mar",
+    "apr": "Apr",
+    "may": "May",
+    "jun": "Jun",
+    "jul": "Jul",
+    "aug": "Aug"
+  },
+  "orders_table": {
+    "recent_orders": "Recent Orders",
+    "total": "{{count}} total",
+    "col_order": "Order",
+    "col_customer": "Customer",
+    "col_items": "Items",
+    "col_total": "Total",
+    "col_status": "Status",
+    "col_date": "Date",
+    "user": "User #{{id}}"
+  },
+  "top_products": {
+    "title": "Top Products"
+  },
+  "inventory": {
+    "title": "Inventory Status",
+    "low_stock": "Low Stock",
+    "out_of_stock": "Out of Stock",
+    "recently_added": "Recently Added"
+  },
+  "ai_insights": {
+    "title": "AI Analytics",
+    "powered": "AI Powered",
+    "recommendations_title": "AI Recommendations",
+    "recommendations_desc": "Based on {{count}} orders, customers prefer premium outerwear. Consider featuring {{products}} in your next campaign.",
+    "recommendations_metric": "{{count}} delivered",
+    "behavior_title": "Customer Behavior",
+    "behavior_desc": "Average order value is {{value}}. Peak ordering happens mid-week. Bundle offers could increase AOV by 15-20%.",
+    "behavior_metric": "{{count}} orders",
+    "demand_title": "Demand Prediction",
+    "demand_desc": "{{count}} products need restocking. Winter collection demand predicted to rise 25% next month.",
+    "demand_metric": "{{count}} products",
+    "forecast_title": "Sales Forecast",
+    "forecast_desc": "At current growth, projected monthly revenue is {{value}}. Retention rate is strong with repeat buyers driving {{percent}}% of sales.",
+    "forecast_metric": "{{rating}} avg rating"
+  },
+  "quick_actions": {
+    "title": "Quick Actions",
+    "manage_products": "Manage Products",
+    "manage_products_sub": "Add, edit, remove items",
+    "view_categories": "View Categories",
+    "view_categories_sub": "Organize your catalog",
+    "process_orders": "Process Orders",
+    "process_orders_sub": "Handle pending orders",
+    "payment_history": "Payment History",
+    "payment_history_sub": "View all transactions"
+  },
+  "ai_assistant": {
+    "title": "AI Assistant",
+    "welcome": "Hello! I'm your AI assistant. I can help analyze sales, find products, and generate reports.",
+    "thinking": "Thinking...",
+    "input_placeholder": "Ask anything...",
+    "generate_report": "Generate Report",
+    "find_products": "Find Products",
+    "analyze_sales": "Analyze Sales",
+    "forecast_revenue": "Forecast Revenue",
+    "error": "Sorry, I could not process that right now."
+  },
+  "donut_delivered": "Delivered",
+  "donut_shipped": "Shipped",
+  "donut_pending": "Pending",
+  "donut_cancelled": "Cancelled",
+  "footer": "© 2026 AI Store Dashboard"
+}

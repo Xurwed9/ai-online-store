@@ -1,0 +1,47 @@
+{
+  "orders": {
+    "title": "Мои заказы",
+    "empty": "Заказов пока нет",
+    "loading": "Загрузка...",
+    "items": "товаров",
+    "cancel": "Отменить",
+    "pay": "Оплатить",
+    "total": "Итого",
+    "confirm_cancel": "Отменить этот заказ?",
+    "order_cancelled": "Заказ отменён",
+    "payment_completed": "Оплата завершена",
+    "cancel_failed": "Не удалось отменить",
+    "payment_failed": "Ошибка оплаты",
+    "status_updated": "Статус обновлён",
+    "update_failed": "Не удалось обновить",
+    "load_failed": "Не удалось загрузить заказы",
+    "product": "Товар #{{id}}",
+    "all_payments": "Все платежи",
+    "my_payments": "Мои платежи",
+    "no_payments": "Платежей пока нет",
+    "go_to_orders": "Перейти к заказам",
+    "payment": "Платёж #{{id}}",
+    "order": "Заказ #{{id}}",
+    "loading_payments": "Загрузка платежей...",
+    "status": {
+      "pending": "Ожидает",
+      "confirmed": "Подтверждён",
+      "shipped": "Отправлен",
+      "delivered": "Доставлен",
+      "cancelled": "Отменён",
+      "completed": "Завершён",
+      "failed": "Ошибка"
+    }
+  },
+  "favorites": {
+    "title": "Избранное",
+    "empty": "Избранных пока нет",
+    "browse": "Смотреть товары",
+    "removed": "Удалено из избранного",
+    "remove_failed": "Не удалось удалить",
+    "load_failed": "Не удалось загрузить избранное",
+    "no_description": "Без описания",
+    "in_stock": "{{count}} в наличии",
+    "out_of_stock": "Нет в наличии"
+  }
+}

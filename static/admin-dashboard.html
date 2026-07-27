@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — AI Store</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'light')</script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <nav class="navbar">
+      <a href="/" class="navbar-brand"><div class="navbar-logo">AI</div><span class="navbar-title">AI Store</span></a>
+      <div class="navbar-links" id="auth-links"></div>
+    </nav>
+
+    <div class="dashboard-container">
+      <div class="dashboard-header">
+        <h1 class="dashboard-greeting">Welcome, <em id="username">User</em></h1>
+        <p class="dashboard-sub">Manage your store with AI-powered tools</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon purple">&#128722;</div>
+          <div class="stat-value" id="statProducts">&mdash;</div>
+          <div class="stat-label">Total Products</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon cyan">&#128194;</div>
+          <div class="stat-value" id="statCategories">&mdash;</div>
+          <div class="stat-label">Categories</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon pink">&#128176;</div>
+          <div class="stat-value" id="statRevenue">&mdash;</div>
+          <div class="stat-label">Revenue</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green">&#9989;</div>
+          <div class="stat-value">Active</div>
+          <div class="stat-label">Account Status</div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Quick Actions</h2>
+      <div class="actions-grid">
+        <a href="/static/products.html" class="action-card">
+          <div class="stat-icon purple">&#128722;</div>
+          <div>
+            <div class="action-text">Products</div>
+            <div class="action-desc">View & manage inventory</div>
+          </div>
+        </a>
+        <a href="/static/categories.html" class="action-card">
+          <div class="stat-icon cyan">&#128194;</div>
+          <div>
+            <div class="action-text">Categories</div>
+            <div class="action-desc">Organize product types</div>
+          </div>
+        </a>
+        <a href="/static/verify-email.html" class="action-card">
+          <div class="stat-icon" style="background:var(--yellow-light);border:1px solid rgba(166,124,0,.12)">&#9993;</div>
+          <div>
+            <div class="action-text">Verify Email</div>
+            <div class="action-desc">Confirm your address</div>
+          </div>
+        </a>
+        <div class="action-card" onclick="handleLogout(event)">
+          <div class="stat-icon" style="background:var(--red-light);border:1px solid rgba(184,59,59,.12)">&#128682;</div>
+          <div>
+            <div class="action-text" style="color:var(--red)">Logout</div>
+            <div class="action-desc">Sign out of your account</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+  <script>
+    updateNavbar();
+    if (!requireAuth()) throw 'x';
+
+    (async function loadDashboard() {
+      try {
+        const me = await apiRequest('/auth/admin-dashboard');
+        const name = me.message.replace('Welcome back, Admin ', '').replace('Welcome back, ', '').split('!')[0] || 'User';
+        document.getElementById('username').textContent = name;
+      } catch (err) {
+        if (err?.status === 401) { clearToken(); window.location.href = '/static/login.html'; return; }
+        document.getElementById('username').textContent = 'User';
+      }
+
+      try {
+        const products = await apiRequest('/products/');
+        document.getElementById('statProducts').textContent = products.length || 0;
+      } catch (_) { document.getElementById('statProducts').textContent = '0'; }
+
+      try {
+        const cats = await apiRequest('/categories/');
+        document.getElementById('statCategories').textContent = cats.length || 0;
+      } catch (_) { document.getElementById('statCategories').textContent = '0'; }
+    })();
+  </script>
+</body>
+</html>

@@ -37,3 +37,16 @@ class VerifyEmailSchema(BaseModel):
 
 class UserPreferencesUpdate(BaseModel):
     preferences: str
+
+
+class UserProfileUpdate(BaseModel):
+    username: str | None = None
+    email: str | None = None
+    phone_number: str | None = None
+    date_of_birth: str | None = None
+    gender: str | None = None
+    country: str | None = None
+    city: str | None = None
+    address: str | None = None
+    language: str | None = None
+    dark_mode: bool | None = None

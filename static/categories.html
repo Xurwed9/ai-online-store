@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Categories — AI Store</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'light')</script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <nav class="navbar">
+      <a href="/" class="navbar-brand"><div class="navbar-logo">AI</div><span class="navbar-title">AI Store</span></a>
+      <div class="navbar-links" id="auth-links"></div>
+    </nav>
+
+    <div class="page-content">
+      <div class="page-top">
+        <h1 class="page-title">Categories</h1>
+        <button class="btn btn-primary" style="width:auto;padding:9px 18px" onclick="openCreateModal()">+ Add</button>
+      </div>
+      <div class="cat-grid" id="catGrid"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <h2 id="modalTitle">Add Category</h2>
+      <div id="modalAlert" class="alert"></div>
+      <form onsubmit="handleSave(event)">
+        <input type="hidden" id="editId">
+        <div class="form-group"><label class="form-label">Name</label><input type="text" class="form-input" id="cName" required></div>
+        <div class="form-group"><label class="form-label">Description</label><input type="text" class="form-input" id="cDesc"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveBtn"><span class="btn-text">Save</span><div class="spinner"></div></button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+  <script>
+    updateNavbar();
+    if (!requireAuth()) throw 'x';
+
+    let products = [];
+
+    async function loadProducts() {
+      try { products = await apiRequest('/products/'); } catch (_) { products = []; }
+    }
+
+    async function loadCategories() {
+      const grid = document.getElementById('catGrid');
+      await loadProducts();
+      try {
+        const items = await apiRequest('/categories/');
+        if (!items.length) { grid.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128194;</div><p>No categories yet</p></div>'; return; }
+        grid.innerHTML = items.map(c => {
+          const count = products.filter(p => p.category_id === c.id).length;
+          return `
+          <div class="cat-card">
+            <div class="cat-header">
+              <div class="cat-name">${c.name}</div>
+              <span class="cat-status ${c.is_active ? 'active' : 'inactive'}">${c.is_active ? 'Active' : 'Inactive'}</span>
+            </div>
+            <div class="cat-desc">${c.description || 'No description'}</div>
+            <div class="cat-count"><span>${count}</span> products</div>
+            <div class="cat-actions">
+              <button class="btn btn-secondary" onclick='editCategory(${JSON.stringify(c)})'>Edit</button>
+              <button class="btn btn-danger" onclick="deleteCategory(${c.id})">Delete</button>
+            </div>
+          </div>`;
+        }).join('');
+      } catch (_) { grid.innerHTML = '<div class="empty-state"><p>Failed to load categories</p></div>'; }
+    }
+
+    function openCreateModal() {
+      document.getElementById('modalTitle').textContent = 'Add Category';
+      document.getElementById('editId').value = '';
+      document.getElementById('cName').value = '';
+      document.getElementById('cDesc').value = '';
+      hideAlert('modalAlert');
+      document.getElementById('modal').classList.add('show');
+    }
+
+    function editCategory(c) {
+      document.getElementById('modalTitle').textContent = 'Edit Category';
+      document.getElementById('editId').value = c.id;
+      document.getElementById('cName').value = c.name;
+      document.getElementById('cDesc').value = c.description || '';
+      hideAlert('modalAlert');
+      document.getElementById('modal').classList.add('show');
+    }
+
+    function closeModal() { document.getElementById('modal').classList.remove('show'); }
+
+    async function handleSave(e) {
+      e.preventDefault();
+      hideAlert('modalAlert');
+      setLoading('saveBtn', true);
+      const id = document.getElementById('editId').value;
+      const body = { name: document.getElementById('cName').value, description: document.getElementById('cDesc').value || null, is_active: true };
+      try {
+        if (id) await apiRequest(`/categories/${id}`, { method:'PUT', json:body });
+        else await apiRequest('/categories/', { method:'POST', json:body });
+        closeModal();
+        showToast(id ? 'Category updated' : 'Category created');
+        loadCategories();
+      } catch (err) { showAlert('modalAlert', err?.data?.detail || 'Save failed'); }
+      finally { setLoading('saveBtn', false); }
+    }
+
+    async function deleteCategory(id) {
+      if (!confirm('Delete this category?')) return;
+      try { await apiRequest(`/categories/${id}`, { method:'DELETE' }); showToast('Category deleted'); loadCategories(); }
+      catch (_) { showToast('Delete failed', 'error'); }
+    }
+
+    loadCategories();
+  </script>
+</body>
+</html>

@@ -81,4 +81,31 @@ export const chat = {
   send: (messages) => axios.post('/chat/', { messages }, tokenJson()),
 }
 
+export const reviews = {
+  getByProduct: (productId) => axios.get(`/reviews/product/${productId}`, token()),
+  getRating: (productId) => axios.get(`/reviews/product/${productId}/rating`, token()),
+  create: (productId, data) => axios.post(`/reviews/product/${productId}`, data, tokenJson()),
+  update: (reviewId, data) => axios.put(`/reviews/${reviewId}`, data, tokenJson()),
+  delete: (reviewId) => axios.delete(`/reviews/${reviewId}`, token()),
+}
+
+export const favorites = {
+  getAll: () => axios.get('/favorites/', token()),
+  add: (productId) => axios.post('/favorites/', { product_id: productId }, tokenJson()),
+  remove: (productId) => axios.delete(`/favorites/${productId}`, token()),
+  check: (productId) => axios.get(`/favorites/check/${productId}`, token()),
+}
+
+export const users = {
+  updateProfile: (data) => api.put('/profile', data),
+  uploadAvatar: (file) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return api.put('/avatar', formData, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}`, 'Content-Type': undefined }
+    })
+  },
+  deleteAvatar: () => api.delete('/avatar'),
+}
+
 export default api

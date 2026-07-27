@@ -44,8 +44,15 @@ export function AuthProvider({ children }) {
     return res.data
   }
 
+  const refreshUser = async () => {
+    try {
+      const me = await auth.me()
+      setUser(prev => ({ ...me.data, token: prev?.token }))
+    } catch (_) {}
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, register, login, logout, verifyEmail }}>
+    <AuthContext.Provider value={{ user, loading, register, login, logout, verifyEmail, refreshUser }}>
       {children}
     </AuthContext.Provider>
   )

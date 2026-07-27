@@ -1,0 +1,7 @@
+{
+  "welcome": "Hello! I'm your AI shopping assistant. I can help you find products, check availability, add to cart, and more.\n\nWhat are you looking for?",
+  "placeholder": "Ask about products...",
+  "received": "I received your request.",
+  "error": "Sorry, I could not process that right now.",
+  "clearChat": "Clear chat"
+}

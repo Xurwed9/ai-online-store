@@ -1,0 +1,47 @@
+{
+  "orders": {
+    "title": "My Orders",
+    "empty": "No orders yet",
+    "loading": "Loading...",
+    "items": "items",
+    "cancel": "Cancel",
+    "pay": "Pay",
+    "total": "Total",
+    "confirm_cancel": "Cancel this order?",
+    "order_cancelled": "Order cancelled",
+    "payment_completed": "Payment completed",
+    "cancel_failed": "Cancel failed",
+    "payment_failed": "Payment failed",
+    "status_updated": "Status updated",
+    "update_failed": "Update failed",
+    "load_failed": "Failed to load orders",
+    "product": "Product #{{id}}",
+    "all_payments": "All Payments",
+    "my_payments": "My Payments",
+    "no_payments": "No payments yet",
+    "go_to_orders": "Go to Orders",
+    "payment": "Payment #{{id}}",
+    "order": "Order #{{id}}",
+    "loading_payments": "Loading payments...",
+    "status": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "shipped": "Shipped",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled",
+      "completed": "Completed",
+      "failed": "Failed"
+    }
+  },
+  "favorites": {
+    "title": "Favorites",
+    "empty": "No favorites yet",
+    "browse": "Browse Products",
+    "removed": "Removed from favorites",
+    "remove_failed": "Remove failed",
+    "load_failed": "Failed to load favorites",
+    "no_description": "No description",
+    "in_stock": "{{count}} in stock",
+    "out_of_stock": "Out of stock"
+  }
+}

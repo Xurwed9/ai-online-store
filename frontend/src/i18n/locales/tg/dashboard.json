@@ -1,0 +1,129 @@
+{
+  "sidebar": {
+    "ai_store": "AI Store",
+    "sections": {
+      "overview": "ХУЛОСА",
+      "management": "ИДОРАКУНӢ",
+      "ai_tools": "AI ВА АСБОБҲО",
+      "system": "СИСТЕМА"
+    },
+    "nav": {
+      "dashboard": "Панели идоракунӣ",
+      "analytics": "Таҳлил",
+      "products": "Маҳсулот",
+      "categories": "Категорияҳо",
+      "orders": "Фармоишҳо",
+      "customers": "Муштариён",
+      "payments": "Пардохтҳо",
+      "ai_analytics": "Таҳлили AI",
+      "ai_assistant": "Ёрирасони AI",
+      "inventory": "Захира",
+      "reviews": "Шарҳҳо",
+      "coupons": "Купонҳо",
+      "settings": "Танзимот"
+    },
+    "out": "Баромад"
+  },
+  "topbar": {
+    "dashboard": "Панели идоракунӣ",
+    "search_placeholder": "Ҷустуҷӯ..."
+  },
+  "welcome": {
+    "title": "Боз омадед, {{name}}",
+    "subtitle": "Ин чизҳо бо мағозаи шумо имрӯз рӯй дода истодаанд."
+  },
+  "stats": {
+    "revenue": "Даромад",
+    "orders": "Фармоишҳо",
+    "products": "Маҳсулот",
+    "customers": "Муштариён",
+    "avg_order": "Фармоиши миёна",
+    "pending": "Дар интизорӣ"
+  },
+  "charts": {
+    "sales_trend": "Раванди фурӯш",
+    "revenue_by_category": "Даромад аз рӯи категория",
+    "order_status": "Ҳолати фармоиш",
+    "monthly_revenue": "Даромади моҳона"
+  },
+  "chart_labels": {
+    "mon": "Душ",
+    "tue": "Сеш",
+    "wed": "Чор",
+    "thu": "Панҷ",
+    "fri": "Ҷум",
+    "sat": "Шан",
+    "sun": "Як",
+    "jan": "Янв",
+    "feb": "Фев",
+    "mar": "Мар",
+    "apr": "Апр",
+    "may": "Май",
+    "jun": "Июн",
+    "jul": "Июл",
+    "aug": "Авг"
+  },
+  "orders_table": {
+    "recent_orders": "Фармоишҳои охирин",
+    "total": "{{count}} ҳамагӣ",
+    "col_order": "Фармоиш",
+    "col_customer": "Муштарӣ",
+    "col_items": "Маҳсулотҳо",
+    "col_total": "Ҳамагӣ",
+    "col_status": "Ҳолат",
+    "col_date": "Сана",
+    "user": "Корбар #{{id}}"
+  },
+  "top_products": {
+    "title": "Беҳтарин маҳсулот"
+  },
+  "inventory": {
+    "title": "Ҳолати захира",
+    "low_stock": "Захираи кам",
+    "out_of_stock": "Аз захира баромадааст",
+    "recently_added": "Навакак илова шудааст"
+  },
+  "ai_insights": {
+    "title": "Таҳлили AI",
+    "powered": "Бо AI кор мекунад",
+    "recommendations_title": "Тавсияҳои AI",
+    "recommendations_desc": "Дар асоси {{count}} фармоиш, муштариён куртаҳои гаронро афзалият медиҳанд. {{products}}-ро дар мавсими навбатӣ намоиш диҳед.",
+    "recommendations_metric": "{{count}} расонида шудааст",
+    "behavior_title": "Рафтори муштариён",
+    "behavior_desc": "Арзиши миёнаи фармоиш {{value}} аст. Бештари фармоишҳо дadoromi ҳафта рух медиҳанд.",
+    "behavior_metric": "{{count}} фармоиш",
+    "demand_title": "Пешбинии талаб",
+    "demand_desc": "{{count}} маҳсулот ба пур кардани захира ниёз доранд. Талаби мавсими зимистона 25% афзоиш ёфтанро пешбинӣ мекунад.",
+    "demand_metric": "{{count}} маҳсулот",
+    "forecast_title": "Пешбинии фурӯш",
+    "forecast_desc": "Бо афзоиши ҷорӣ, даромади моҳонаи пешбинишуда {{value}} аст.",
+    "forecast_metric": "Баҳои миёнаи {{rating}}"
+  },
+  "quick_actions": {
+    "title": "Амалҳои зуд",
+    "manage_products": "Маҳсулотро идора кунед",
+    "manage_products_sub": "Илова, таҳрир, хориҷ кардани artykułҳо",
+    "view_categories": "Категорияҳоро диҳед",
+    "view_categories_sub": "Каталоги худро танзим кунед",
+    "process_orders": "Фармоишҳоро коркард кунед",
+    "process_orders_sub": "Фармоишҳои дар интизорӣ-ро идора кунед",
+    "payment_history": "Таърихи пардохт",
+    "payment_history_sub": "Ҳамаи амалиётҳоро бинед"
+  },
+  "ai_assistant": {
+    "title": "Ёрирасони AI",
+    "welcome": "Салом! Ман ёрирасони AI-и шумо ҳастам. Ман метавонам дар таҳлили фурӯш, ёфтани маҳсулот ва тайёр кардани ҳисоботҳо кӯмак кунам.",
+    "thinking": "Фикр кардан...",
+    "input_placeholder": "Ҳар чизро пурсед...",
+    "generate_report": "Ҳисобот тайёр кардан",
+    "find_products": "Маҳсулот ёфтан",
+    "analyze_sales": "Фурӯшро таҳлил кардан",
+    "forecast_revenue": "Даромадро пешбинӣ кардан",
+    "error": "Бубахшед, ман наметавонам ҳоло коркард кунам."
+  },
+  "donut_delivered": "Расонида шудааст",
+  "donut_shipped": "Фиристода шудааст",
+  "donut_pending": "Дар интизорӣ",
+  "donut_cancelled": "Бекор шудааст",
+  "footer": "© 2026 AI Store — Панели идоракунӣ"
+}

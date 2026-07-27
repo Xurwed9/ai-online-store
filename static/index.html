@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Store</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'light')</script>
+  <style>
+    .hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 20px;animation:slideUp .5s ease}
+    .hero-badge{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 14px;background:var(--accent-light);border:1px solid rgba(196,93,62,.15);
+      border-radius:100px;font-size:12px;color:var(--accent);font-weight:500;margin-bottom:28px;
+    }
+    .hero-title{
+      font-family:var(--font-display);font-size:48px;font-weight:400;
+      letter-spacing:-1px;line-height:1.1;margin-bottom:16px;max-width:560px;
+    }
+    .hero-title em{font-style:normal;color:var(--accent)}
+    .hero-desc{font-size:16px;color:var(--text-secondary);max-width:420px;line-height:1.6;margin-bottom:36px}
+    .hero-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+    .hero-actions .btn{width:auto;padding:12px 28px}
+    .features{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+      gap:14px;max-width:720px;width:100%;margin-top:56px;animation:slideUp .7s ease;
+    }
+    .feature-card{padding:22px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);text-align:left;transition:var(--transition)}
+    .feature-card:hover{border-color:var(--border-strong);box-shadow:var(--shadow-sm)}
+    .feature-icon{font-size:22px;margin-bottom:10px}
+    .feature-title{font-size:14px;font-weight:600;margin-bottom:4px}
+    .feature-desc{font-size:12px;color:var(--text-muted);line-height:1.5}
+    .marquee-wrap{overflow:hidden;width:100%;margin-top:56px;animation:slideUp .8s ease}
+    .marquee-label{text-align:center;font-size:12px;color:var(--text-muted);margin-bottom:12px;letter-spacing:1px;text-transform:uppercase;font-weight:500}
+    .marquee{display:flex;gap:14px;animation:scroll 30s linear infinite;width:max-content}
+    .marquee-item{
+      flex-shrink:0;width:180px;height:240px;border-radius:var(--radius);
+      overflow:hidden;border:1px solid var(--border);background:var(--bg-warm);
+    }
+    .marquee-item img{width:100%;height:100%;object-fit:cover}
+    @keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <nav class="navbar">
+      <a href="/" class="navbar-brand">
+        <div class="navbar-logo">AI</div>
+        <span class="navbar-title">AI Store</span>
+      </a>
+      <div class="navbar-links" id="auth-links"></div>
+    </nav>
+
+    <div class="hero">
+      <div class="hero-badge">&#9889; AI-Powered Shopping</div>
+      <h1 class="hero-title">Curated fashion, <em>intelligently</em> chosen</h1>
+      <p class="hero-desc">Discover clothing and accessories tailored to your style. Our AI assistant helps you find exactly what you need.</p>
+      <div class="hero-actions">
+        <a href="/static/register.html" class="btn btn-primary" id="ctaMain">Get Started</a>
+        <a href="/static/login.html" class="btn btn-secondary" id="ctaSecondary">Sign In</a>
+      </div>
+
+      <div class="features">
+        <div class="feature-card">
+          <div class="feature-icon">&#129302;</div>
+          <div class="feature-title">AI Recommendations</div>
+          <div class="feature-desc">Personalized suggestions powered by machine learning.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#128274;</div>
+          <div class="feature-title">Secure Payments</div>
+          <div class="feature-desc">Enterprise-grade security for every transaction.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">&#128666;</div>
+          <div class="feature-title">Fast Delivery</div>
+          <div class="feature-desc">Real-time tracking, right to your doorstep.</div>
+        </div>
+      </div>
+
+      <div class="marquee-wrap">
+        <div class="marquee-label">From our collection</div>
+        <div class="marquee">
+          <div class="marquee-item"><img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=360&h=480&fit=crop" alt=""></div>
+          <div class="marquee-item"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=360&h=480&fit=crop" alt=""></div>
+          <div class="marquee-item"><img src="https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=360&h=480&fit=crop" alt=""></div>
+          <div class="marquee-item"><img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=360&h=480&fit=crop" alt=""></div>
+          <div class="marquee-item"><img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=360&h=480&fit=crop" alt=""></div>
+          <div class="marquee-item"><img src="https://images.unsplash.com/photo-1539185441755-769473a23570?w=360&h=480&fit=crop" alt=""></div>
+          <div class="marquee-item"><img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=360&h=480&fit=crop" alt=""></div>
+          <div class="marquee-item"><img src="https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=360&h=480&fit=crop" alt=""></div>
+          <div class="marquee-item"><img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=360&h=480&fit=crop" alt=""></div>
+          <div class="marquee-item"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=360&h=480&fit=crop" alt=""></div>
+          <div class="marquee-item"><img src="https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=360&h=480&fit=crop" alt=""></div>
+          <div class="marquee-item"><img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?w=360&h=480&fit=crop" alt=""></div>
+          <div class="marquee-item"><img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=360&h=480&fit=crop" alt=""></div>
+          <div class="marquee-item"><img src="https://images.unsplash.com/photo-1539185441755-769473a23570?w=360&h=480&fit=crop" alt=""></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+  <script>
+    updateNavbar();
+    if (isLoggedIn()) {
+      document.getElementById('ctaMain').textContent = 'Dashboard';
+      document.getElementById('ctaMain').href = '/static/admin-dashboard.html';
+      document.getElementById('ctaSecondary').style.display = 'none';
+    }
+  </script>
+</body>
+</html>

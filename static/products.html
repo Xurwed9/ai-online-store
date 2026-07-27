@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products — AI Store</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'light')</script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <nav class="navbar">
+      <a href="/" class="navbar-brand"><div class="navbar-logo">AI</div><span class="navbar-title">AI Store</span></a>
+      <div class="navbar-links" id="auth-links"></div>
+    </nav>
+
+    <div class="page-content">
+      <div class="page-top">
+        <h1 class="page-title">Products</h1>
+        <div style="display:flex;gap:12px;align-items:center">
+          <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search..." oninput="debounceSearch()">
+          </div>
+          <button class="btn btn-primary" style="width:auto;padding:9px 18px" onclick="openCreateModal()">+ Add</button>
+        </div>
+      </div>
+      <div class="products-grid" id="productsGrid"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <h2 id="modalTitle">Add Product</h2>
+      <div id="modalAlert" class="alert"></div>
+      <form onsubmit="handleSave(event)">
+        <input type="hidden" id="editId">
+        <div class="form-group"><label class="form-label">Name</label><input type="text" class="form-input" id="pName" required></div>
+        <div class="form-group"><label class="form-label">Description</label><input type="text" class="form-input" id="pDesc"></div>
+        <div class="form-group"><label class="form-label">Price ($)</label><input type="number" step="0.01" class="form-input" id="pPrice" required></div>
+        <div class="form-group"><label class="form-label">Stock</label><input type="number" class="form-input" id="pStock" value="0"></div>
+        <div class="form-group"><label class="form-label">Image URL</label><input type="text" class="form-input" id="pImage" placeholder="https://..."></div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-input" id="pCatId" required>
+            <option value="">Select category...</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveBtn"><span class="btn-text">Save</span><div class="spinner"></div></button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+  <script>
+    updateNavbar();
+    if (!requireAuth()) throw 'x';
+
+    let categories = [];
+    let searchTimer;
+    function debounceSearch() { clearTimeout(searchTimer); searchTimer = setTimeout(loadProducts, 300); }
+
+    async function loadCategories() {
+      try {
+        categories = await apiRequest('/categories/');
+        const sel = document.getElementById('pCatId');
+        categories.forEach(c => {
+          const opt = document.createElement('option');
+          opt.value = c.id;
+          opt.textContent = c.name;
+          sel.appendChild(opt);
+        });
+      } catch (_) {}
+    }
+
+    async function loadProducts() {
+      const q = document.getElementById('searchInput').value.trim();
+      const grid = document.getElementById('productsGrid');
+      try {
+        const items = q ? await apiRequest(`/products/search?q=${encodeURIComponent(q)}`) : await apiRequest('/products/');
+        if (!items.length) { grid.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128722;</div><p>No products found</p></div>'; return; }
+        grid.innerHTML = items.map(p => {
+          const cat = categories.find(c => c.id === p.category_id);
+          const catName = cat ? cat.name : '';
+          return `
+          <div class="product-card">
+            <div class="product-img">
+              ${p.image_url ? `<img src="${p.image_url}" alt="${p.name}" loading="lazy" onerror="this.parentElement.innerHTML='&#128722;'">` : '&#128722;'}
+              ${catName ? `<span class="product-badge">${catName}</span>` : ''}
+            </div>
+            <div class="product-info">
+              <div class="product-name">${p.name}</div>
+              <div class="product-desc">${p.description || 'No description'}</div>
+              <div class="product-bottom">
+                <div class="product-price">$${Number(p.price).toFixed(2)}</div>
+                <div class="product-stock">${p.stock > 0 ? p.stock + ' in stock' : 'Out of stock'}</div>
+              </div>
+              <div class="product-actions">
+                <button class="btn btn-secondary" onclick='editProduct(${JSON.stringify(p)})'>Edit</button>
+                <button class="btn btn-danger" onclick="deleteProduct(${p.id})">Delete</button>
+              </div>
+            </div>
+          </div>`;
+        }).join('');
+      } catch (_) { grid.innerHTML = '<div class="empty-state"><div class="empty-icon">&#9888;</div><p>Failed to load products</p></div>'; }
+    }
+
+    function openCreateModal() {
+      document.getElementById('modalTitle').textContent = 'Add Product';
+      document.getElementById('editId').value = '';
+      ['pName','pDesc','pPrice','pStock','pImage','pCatId'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('pStock').value = '0';
+      hideAlert('modalAlert');
+      document.getElementById('modal').classList.add('show');
+    }
+
+    function editProduct(p) {
+      document.getElementById('modalTitle').textContent = 'Edit Product';
+      document.getElementById('editId').value = p.id;
+      document.getElementById('pName').value = p.name;
+      document.getElementById('pDesc').value = p.description || '';
+      document.getElementById('pPrice').value = p.price;
+      document.getElementById('pStock').value = p.stock;
+      document.getElementById('pImage').value = p.image_url || '';
+      document.getElementById('pCatId').value = p.category_id;
+      hideAlert('modalAlert');
+      document.getElementById('modal').classList.add('show');
+    }
+
+    function closeModal() { document.getElementById('modal').classList.remove('show'); }
+
+    async function handleSave(e) {
+      e.preventDefault();
+      hideAlert('modalAlert');
+      setLoading('saveBtn', true);
+      const id = document.getElementById('editId').value;
+      const body = {
+        name: document.getElementById('pName').value,
+        description: document.getElementById('pDesc').value || null,
+        price: document.getElementById('pPrice').value,
+        stock: parseInt(document.getElementById('pStock').value) || 0,
+        image_url: document.getElementById('pImage').value || null,
+        category_id: parseInt(document.getElementById('pCatId').value)
+      };
+      try {
+        if (id) await apiRequest(`/products/${id}`, { method:'PUT', json:body });
+        else await apiRequest('/products/', { method:'POST', json:body });
+        closeModal();
+        showToast(id ? 'Product updated' : 'Product created');
+        loadProducts();
+      } catch (err) {
+        showAlert('modalAlert', err?.data?.detail || 'Save failed');
+      } finally { setLoading('saveBtn', false); }
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm('Delete this product?')) return;
+      try { await apiRequest(`/products/${id}`, { method:'DELETE' }); showToast('Product deleted'); loadProducts(); }
+      catch (_) { showToast('Delete failed', 'error'); }
+    }
+
+    loadCategories().then(loadProducts);
+  </script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+{
+  "sidebar": {
+    "ai_store": "AI Store",
+    "sections": {
+      "overview": "ОБЗОР",
+      "management": "УПРАВЛЕНИЕ",
+      "ai_tools": "ИИ И ИНСТРУМЕНТЫ",
+      "system": "СИСТЕМА"
+    },
+    "nav": {
+      "dashboard": "Панель",
+      "analytics": "Аналитика",
+      "products": "Товары",
+      "categories": "Категории",
+      "orders": "Заказы",
+      "customers": "Клиенты",
+      "payments": "Платежи",
+      "ai_analytics": "ИИ-аналитика",
+      "ai_assistant": "ИИ-ассистент",
+      "inventory": "Склад",
+      "reviews": "Отзывы",
+      "coupons": "Купоны",
+      "settings": "Настройки"
+    },
+    "out": "Выход"
+  },
+  "topbar": {
+    "dashboard": "Панель",
+    "search_placeholder": "Поиск..."
+  },
+  "welcome": {
+    "title": "С возвращением, {{name}}",
+    "subtitle": "Вот что происходит с вашим магазином сегодня."
+  },
+  "stats": {
+    "revenue": "Выручка",
+    "orders": "Заказы",
+    "products": "Товары",
+    "customers": "Клиенты",
+    "avg_order": "Средний заказ",
+    "pending": "Ожидает"
+  },
+  "charts": {
+    "sales_trend": "Динамика продаж",
+    "revenue_by_category": "Выручка по категориям",
+    "order_status": "Статусы заказов",
+    "monthly_revenue": "Месячная выручка"
+  },
+  "chart_labels": {
+    "mon": "Пн",
+    "tue": "Вт",
+    "wed": "Ср",
+    "thu": "Чт",
+    "fri": "Пт",
+    "sat": "Сб",
+    "sun": "Вс",
+    "jan": "Янв",
+    "feb": "Фев",
+    "mar": "Мар",
+    "apr": "Апр",
+    "may": "Май",
+    "jun": "Июн",
+    "jul": "Июл",
+    "aug": "Авг"
+  },
+  "orders_table": {
+    "recent_orders": "Последние заказы",
+    "total": "Всего: {{count}}",
+    "col_order": "Заказ",
+    "col_customer": "Клиент",
+    "col_items": "Товары",
+    "col_total": "Итого",
+    "col_status": "Статус",
+    "col_date": "Дата",
+    "user": "Пользователь #{{id}}"
+  },
+  "top_products": {
+    "title": "Лучшие товары"
+  },
+  "inventory": {
+    "title": "Состояние склада",
+    "low_stock": "Мало на складе",
+    "out_of_stock": "Нет в наличии",
+    "recently_added": "Недавно добавлены"
+  },
+  "ai_insights": {
+    "title": "ИИ-аналитика",
+    "powered": "На основе ИИ",
+    "recommendations_title": "Рекомендации ИИ",
+    "recommendations_desc": "На основе {{count}} заказов клиенты предпочитают премиум верхнюю одежду. Рекомендуем продвигать {{products}} в следующей кампании.",
+    "recommendations_metric": "{{count}} доставлено",
+    "behavior_title": "Поведение клиентов",
+    "behavior_desc": "Средний чек — {{value}}. Пик заказов приходится на середину недели. Бандлы могут увеличить средний чек на 15-20%.",
+    "behavior_metric": "{{count}} заказов",
+    "demand_title": "Прогноз спроса",
+    "demand_desc": "{{count}} товаров нуждаются в пополнении. Спрос на зимнюю коллекцию прогнозируется вырасти на 25% в следующем месяце.",
+    "demand_metric": "{{count}} товаров",
+    "forecast_title": "Прогноз продаж",
+    "forecast_desc": "При текущем росте прогнозируемая месячная выручка составит {{value}}. Удержание клиентов на высоком уровне — повторные покупатели обеспечивают {{percent}}% продаж.",
+    "forecast_metric": "Средний рейтинг {{rating}}"
+  },
+  "quick_actions": {
+    "title": "Быстрые действия",
+    "manage_products": "Управление товарами",
+    "manage_products_sub": "Добавление, редактирование, удаление",
+    "view_categories": "Просмотр категорий",
+    "view_categories_sub": "Организация каталога",
+    "process_orders": "Обработка заказов",
+    "process_orders_sub": "Работа с ожидающими заказами",
+    "payment_history": "История платежей",
+    "payment_history_sub": "Просмотр всех транзакций"
+  },
+  "ai_assistant": {
+    "title": "ИИ-ассистент",
+    "welcome": "Здравствуйте! Я ваш ИИ-ассистент. Я могу помочь с анализом продаж, поиском товаров и составлением отчётов.",
+    "thinking": "Думаю...",
+    "input_placeholder": "Задайте вопрос...",
+    "generate_report": "Составить отчёт",
+    "find_products": "Найти товары",
+    "analyze_sales": "Анализ продаж",
+    "forecast_revenue": "Прогноз выручки",
+    "error": "Извините, я не могу обработать этот запрос прямо сейчас."
+  },
+  "donut_delivered": "Доставлено",
+  "donut_shipped": "Отправлено",
+  "donut_pending": "Ожидает",
+  "donut_cancelled": "Отменено",
+  "footer": "© 2026 AI Store Панель управления"
+}

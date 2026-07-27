@@ -4,61 +4,63 @@ import { payments as paymentsApi } from '../api/client'
 import { useAuth } from '../context/AuthContext'
 import { toast } from 'react-hot-toast'
 import { Package, Clock, CheckCircle, Truck, XCircle, ChevronDown, ChevronUp, CreditCard } from 'lucide-react'
-
-const statusConfig = {
-  pending: { icon: <Clock size={14} />, label: 'Pending', color: 'bg-yellow/10 text-yellow border-yellow/15' },
-  confirmed: { icon: <CheckCircle size={14} />, label: 'Confirmed', color: 'bg-accent/10 text-accent border-accent/15' },
-  shipped: { icon: <Truck size={14} />, label: 'Shipped', color: 'bg-blue/10 text-blue border-blue/15' },
-  delivered: { icon: <CheckCircle size={14} />, label: 'Delivered', color: 'bg-green/10 text-green border-green/15' },
-  cancelled: { icon: <XCircle size={14} />, label: 'Cancelled', color: 'bg-red/10 text-red border-red/15' },
-}
+import { useTranslation } from 'react-i18next'
 
 export default function Orders() {
+  const { t } = useTranslation('orders')
   const { user } = useAuth()
   const isAdmin = user?.role === 'admin'
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [expanded, setExpanded] = useState(null)
 
+  const statusConfig = {
+    pending: { icon: <Clock size={14} />, label: t('orders.status.pending'), color: 'bg-yellow/10 text-yellow border-yellow/15' },
+    confirmed: { icon: <CheckCircle size={14} />, label: t('orders.status.confirmed'), color: 'bg-accent/10 text-accent border-accent/15' },
+    shipped: { icon: <Truck size={14} />, label: t('orders.status.shipped'), color: 'bg-blue/10 text-blue border-blue/15' },
+    delivered: { icon: <CheckCircle size={14} />, label: t('orders.status.delivered'), color: 'bg-green/10 text-green border-green/15' },
+    cancelled: { icon: <XCircle size={14} />, label: t('orders.status.cancelled'), color: 'bg-red/10 text-red border-red/15' },
+  }
+
   const load = async () => {
     try { const r = await ordersApi.getAll(); setItems(r.data) }
-    catch { toast.error('Failed to load orders') }
+    catch { toast.error(t('orders.load_failed')) }
     finally { setLoading(false) }
   }
 
   useEffect(() => { load() }, [])
 
   const handleCancel = async (id) => {
-    if (!confirm('Cancel this order?')) return
-    try { await ordersApi.cancel(id); toast.success('Order cancelled'); load() }
-    catch (err) { toast.error(err?.response?.data?.detail || 'Cancel failed') }
+    if (!confirm(t('orders.confirm_cancel'))) return
+    try { await ordersApi.cancel(id); toast.success(t('orders.order_cancelled')); load() }
+    catch (err) { toast.error(err?.response?.data?.detail || t('orders.cancel_failed')) }
   }
 
   const handlePay = async (orderId) => {
     try {
       await paymentsApi.create({ order_id: orderId, method: 'card' })
-      toast.success('Payment completed')
+      toast.success(t('orders.payment_completed'))
       load()
     } catch (err) {
-      toast.error(err?.response?.data?.detail || 'Payment failed')
+      toast.error(err?.response?.data?.detail || t('orders.payment_failed'))
     }
   }
 
   const handleStatus = async (id, status) => {
-    try { await ordersApi.updateStatus(id, status); toast.success('Status updated'); load() }
-    catch (err) { toast.error(err?.response?.data?.detail || 'Update failed') }
+    try { await ordersApi.updateStatus(id, status); toast.success(t('orders.status_updated')); load() }
+    catch (err) { toast.error(err?.response?.data?.detail || t('orders.update_failed')) }
   }
 
-  if (loading) return <div className="flex-1 flex items-center justify-center"><div className="text-text-muted text-sm animate-pulse">Loading...</div></div>
+  if (loading) return <div className="flex-1 flex items-center justify-center"><div className="text-text-muted text-sm animate-pulse">{t('orders.loading')}</div></div>
 
   return (
     <div className="flex-1 px-8 py-10 max-w-[900px] mx-auto w-full">
-      <h1 className="font-display text-[26px] tracking-tight mb-7 animate-[slideUp_0.4s_ease]">My Orders</h1>
+      <h1 className="font-display text-[26px] tracking-tight mb-7 animate-[slideUp_0.4s_ease]">{t('orders.title')}</h1>
 
       {items.length === 0 ? (
         <div className="text-center py-20 text-text-muted animate-[slideUp_0.5s_ease]">
           <Package size={44} className="mx-auto mb-3.5 opacity-50" />
-          <p className="text-sm">No orders yet</p>
+          <p className="text-sm">{t('orders.empty')}</p>
         </div>
       ) : (
         <div className="space-y-3 animate-[slideUp_0.5s_ease]">
@@ -71,7 +73,7 @@ export default function Orders() {
                   <div className="flex items-center gap-3">
                     <div className="text-sm font-semibold">#{o.id}</div>
                     <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium border ${st.color}`}>{st.icon}{st.label}</span>
-                    <span className="text-[13px] text-text-muted">{o.items?.length || 0} items</span>
+                    <span className="text-[13px] text-text-muted">{t('common:items_count', { count: o.items?.length || 0 })}</span>
                   </div>
                   <div className="flex items-center gap-4">
                     <span className="text-sm font-semibold">${Number(o.total_price).toFixed(2)}</span>
@@ -95,7 +97,7 @@ export default function Orders() {
                     <div className="space-y-2 mb-3">
                       {o.items?.map(item => (
                         <div key={item.id} className="flex justify-between items-center text-[13px]">
-                          <span className="text-text-secondary">{item.product_name || `Product #${item.product_id}`}</span>
+                          <span className="text-text-secondary">{item.product_name || t('orders.product', { id: item.product_id })}</span>
                           <span className="text-text-muted">x{item.quantity} &middot; ${Number(item.price).toFixed(2)}</span>
                         </div>
                       ))}
@@ -106,8 +108,8 @@ export default function Orders() {
                       </span>
                       {["pending", "confirmed"].includes(o.status) && !isAdmin && (
                         <>
-                          <button onClick={() => handleCancel(o.id)} className="text-[12px] px-3 py-1 rounded-lg bg-red/10 border border-red/15 text-red cursor-pointer hover:bg-red/15 transition-all">Cancel</button>
-                          <button onClick={() => handlePay(o.id)} className="text-[12px] px-3 py-1 rounded-lg bg-green/10 border border-green/15 text-green cursor-pointer hover:bg-green/15 transition-all flex items-center gap-1"><CreditCard size={12} />Pay</button>
+                          <button onClick={() => handleCancel(o.id)} className="text-[12px] px-3 py-1 rounded-lg bg-red/10 border border-red/15 text-red cursor-pointer hover:bg-red/15 transition-all">{t('orders.cancel')}</button>
+                          <button onClick={() => handlePay(o.id)} className="text-[12px] px-3 py-1 rounded-lg bg-green/10 border border-green/15 text-green cursor-pointer hover:bg-green/15 transition-all flex items-center gap-1"><CreditCard size={12} />{t('orders.pay')}</button>
                         </>
                       )}
                     </div>

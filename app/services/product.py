@@ -67,6 +67,8 @@ async def create_new_product(data: ProductCreate, db: AsyncSession):
         name=data.name,
         description=data.description,
         price=data.price,
+        color=data.color,
+        size=data.size,
         stock=data.stock,
         image_url=data.image_url,
         is_active=data.is_active,
@@ -97,6 +99,10 @@ async def update_product(product_id: int, data: ProductUpdate, db: AsyncSession)
         product.description = data.description
     if data.price is not None:
         product.price = data.price
+    if data.color is not None:
+        product.color = data.color
+    if data.size is not None:
+        product.size = data.size
     if data.stock is not None:
         product.stock = data.stock
     if data.image_url is not None:

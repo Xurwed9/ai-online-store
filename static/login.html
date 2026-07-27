@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — AI Store</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('theme')||'light')</script>
+</head>
+<body>
+  <div class="page-wrapper">
+    <nav class="navbar">
+      <a href="/" class="navbar-brand">
+        <div class="navbar-logo">AI</div>
+        <span class="navbar-title">AI Store</span>
+      </a>
+      <div class="navbar-links" id="auth-links"></div>
+    </nav>
+
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <div class="auth-icon green">&#9889;</div>
+          <h1 class="auth-title">Welcome Back</h1>
+          <p class="auth-subtitle">Sign in to your account to continue</p>
+        </div>
+
+        <div id="alert" class="alert"></div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input type="text" class="form-input" id="username" placeholder="Enter your username" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-input" id="password" placeholder="Enter your password" required>
+          </div>
+          <button type="submit" class="btn btn-primary" id="loginBtn">
+            <span class="btn-text">Sign In</span>
+            <div class="spinner"></div>
+          </button>
+        </form>
+
+        <div class="divider">or</div>
+
+        <p class="auth-link">
+          Don't have an account? <a href="/static/register.html">Create one</a>
+        </p>
+        <p class="auth-link" style="margin-top:8px">
+          <a href="/static/verify-email.html">Verify your email</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+  <script>
+    updateNavbar();
+    if (isLoggedIn()) window.location.href = '/static/admin-dashboard.html';
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      hideAlert('alert');
+      setLoading('loginBtn', true);
+
+      try {
+        const body = new URLSearchParams();
+        body.append('username', document.getElementById('username').value);
+        body.append('password', document.getElementById('password').value);
+
+        const res = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: body
+        });
+        const data = await res.json();
+        if (!res.ok) throw { status: res.status, data };
+
+        setToken(data.access_token);
+        showToast('Welcome back!');
+        setTimeout(() => { window.location.href = '/static/admin-dashboard.html'; }, 800);
+      } catch (err) {
+        showAlert('alert', err?.data?.detail || 'Login failed');
+      } finally {
+        setLoading('loginBtn', false);
+      }
+    }
+  </script>
+</body>
+</html>

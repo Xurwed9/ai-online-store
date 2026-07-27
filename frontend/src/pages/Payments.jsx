@@ -3,6 +3,7 @@ import { payments as paymentsApi } from '../api/client'
 import { useAuth } from '../context/AuthContext'
 import { CreditCard, CheckCircle, Clock, XCircle, ArrowLeft } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 const STATUS_MAP = {
   pending: { icon: Clock, color: 'text-yellow', bg: 'bg-yellow/10' },
@@ -11,6 +12,7 @@ const STATUS_MAP = {
 }
 
 export default function Payments() {
+  const { t } = useTranslation('orders')
   const { user } = useAuth()
   const isAdmin = user?.role === 'admin'
   const [payments, setPayments] = useState([])
@@ -29,21 +31,21 @@ export default function Payments() {
 
   useEffect(() => { fetchPayments() }, [])
 
-  if (loading) return <div className="text-center py-20 text-text-secondary text-sm">Loading payments...</div>
+  if (loading) return <div className="text-center py-20 text-text-secondary text-sm">{t('orders.loading_payments')}</div>
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="flex items-center gap-3 mb-8">
         <CreditCard size={24} className="text-accent" />
-        <h1 className="text-2xl font-bold text-text">{isAdmin ? 'All Payments' : 'My Payments'}</h1>
+        <h1 className="text-2xl font-bold text-text">{isAdmin ? t('orders.all_payments') : t('orders.my_payments')}</h1>
       </div>
 
       {payments.length === 0 ? (
         <div className="text-center py-20">
           <CreditCard size={40} className="text-border-strong mx-auto mb-4" />
-          <p className="text-text-secondary text-sm">No payments yet</p>
+          <p className="text-text-secondary text-sm">{t('orders.no_payments')}</p>
           <Link to="/orders" className="inline-flex items-center gap-1.5 mt-4 px-4 py-2 rounded-lg bg-accent text-white text-[13px] font-medium no-underline hover:opacity-90 transition-opacity">
-            <ArrowLeft size={14} /> Go to Orders
+            <ArrowLeft size={14} /> {t('orders.go_to_orders')}
           </Link>
         </div>
       ) : (
@@ -59,8 +61,8 @@ export default function Payments() {
                       <StIcon size={18} className={st.color} />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-text">Payment #{p.id}</p>
-                      <p className="text-xs text-text-secondary">Order #{p.order_id} • {p.method || 'N/A'}</p>
+                      <p className="text-sm font-medium text-text">{t('orders.payment', { id: p.id })}</p>
+                      <p className="text-xs text-text-secondary">{t('orders.order', { id: p.order_id })} • {p.method || 'N/A'}</p>
                     </div>
                   </div>
                   <div className="text-right">
