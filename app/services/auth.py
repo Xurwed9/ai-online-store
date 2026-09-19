@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.security import verify_password, create_access_token, hash_password
 from sqlalchemy import select
 from app.models.models import User
-from app.services.email import send_verification_email  
+# from app.services.email import send_verification_email  
 
 async def register(data: UserCreate, db: AsyncSession):
     email_exists = await get_user_by_email(data.email, db)
@@ -40,7 +40,8 @@ async def register(data: UserCreate, db: AsyncSession):
     await db.commit()
     await db.refresh(new_user)
 
-    await send_verification_email(new_user.email, code)
+    # await send_verification_email(new_user.email, code)
+    print(f"VERIFICATION CODE: {code}")
 
     return {"message": "Пользователь зарегистрирован. Проверьте почту для получения кода подтверждения."}
 
