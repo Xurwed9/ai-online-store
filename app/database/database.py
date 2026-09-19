@@ -13,6 +13,7 @@ if DATABASE_URL.startswith("postgresql://"):
         "postgresql+asyncpg://",
         1
     )
+print("DATABASE URL:", DATABASE_URL.split("@")[0] + "@***")
 
 engine = create_async_engine(DATABASE_URL, echo=False)
 
